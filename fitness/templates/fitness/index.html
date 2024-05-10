@@ -17,35 +17,34 @@
         {% endblock %}
     </style>
 
-    <div class="banner-container">
-        <header>
-            <img src="{% static 'fitness/default_images/logotipo_iscte.JPG' %}" width="350" height="150" alt="Banner">
+    <div class="header-nav-container">
+        <header class="header">
+            <a href="{% url 'fitness:index' %}" class="text-decoration-none text-white">The DIAM Gym</a>
         </header>
+
+
+        <nav class="topnav">
+            {% if not request.user.is_authenticated %}
+                <a href="{% url 'fitness:index' %}">Home Page</a>
+                <a href="{% url 'fitness:forum' %}">Discussions/Forum</a>
+                <a href="{% url 'fitness:login_users' %}">Login</a>
+            {% else %}
+                <a href="{% url 'fitness:index' %}">Home Page</a>
+                <a href="{% url 'fitness:forum' %}">Discussions/Forum</a>
+                <a href="{% url 'fitness:user_info' %}">Detalhes da conta</a>
+                <a href="{% url 'fitness:logout_users' %}">Logout</a>
+            {% endif %}
+        </nav>
     </div>
 
-    {% block nav %}
-    {% if not request.user.is_authenticated %}
-        <nav class="topnav">
-            <a href="{% url 'fitness:index' %}">Home Page</a>
-            <a href="{% url 'fitness:forum' %}">Discussions/Forum</a>
-            <a href="{% url 'fitness:login_users' %}">Login</a>
-        </nav>
-    {% else %}
-        <nav class="topnav">
-            {% if request.user.is_superuser %}
-                <a><span style="color: #ffcc00; font-weight: bold;">Username:
-                    {{ request.user.username }} (Admin)</span></a>
-            {% else %}
-                <a><span class="username">{{ request.user.username }}</span>
-                    <img class="profile-image" src="{{ utilizador.profile_picture.url }}" alt="Profile Picture"></a>
-            {% endif %}
-            <a href="{% url 'fitness:index' %}">Home Page</a>
-            <a href="{% url 'fitness:forum' %}">Discussions/Forum</a>
-            <a href="{% url 'fitness:user_info' %}">Detalhes da conta</a>
-            <a href="{% url 'fitness:logout_users' %}">Logout</a>
-        </nav>
-    {% endif %}
-    {% endblock %}
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to The DIAM Gym</h1>
+            <p>Your journey to a healthier lifestyle starts here.</p>
+            <a href="{% url 'fitness:login_users' %}" class="cta-button">Get Started</a>
+        </div>
+    </div>
+
 
     <div class="notnav">
         <p><br></p>
