@@ -12,6 +12,12 @@ body {
     min-height: 150vh; /* Set the minimum height to 100% of the viewport height */
 }
 
+.header {
+    font-size: 24px; /* Adjust font size */
+    color: white; /* Text color */
+    text-align: left; /* Align text to the left */
+}
+
 .notnav {
     margin: 10px;
     background-color: rgba(255, 255, 255, 0.1); /* White background with 50% opacity */
@@ -21,12 +27,63 @@ body {
     /*opacity: 0.5; */
 }
 
+.header-nav-container {
+    display: flex; /* Use Flexbox for alignment */
+    justify-content: space-between; /* Ensure header and nav are at opposite ends */
+    align-items: center; /* Vertically align content */
+    padding: 10px 20px; /* Padding around the content */
+    background-color: #333; /* Background color for the container */
+}
+
 .topnav {
-    background-color: #333;
-    overflow: hidden;
-    position: sticky;
-    display: flex; /* Use flexbox to align items */
-    align-items: center; /* Center items vertically */
+    display: flex; /* Use Flexbox for alignment */
+    justify-content: flex-end; /* Align items to the right */
+    gap: 10px; /* Add some space between the nav items */
+}
+
+.topnav a {
+    color: #f2f2f2; /* Text color */
+    text-decoration: none;
+    padding: 10px; /* Padding for clickability */
+    font-size: 16px; /* Adjust font size */
+}
+
+.topnav a:hover {
+    background-color: #555; /* Change background on hover */
+}
+
+.hero-section {
+    height: 80vh; /* 80% of viewport height */
+    background-image: url('../../../media/gym_stockphotos/pexels-ivan-samkov-4162451.jpg'); /* Background image */
+    background-size: cover; /* Cover the entire section */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* No repetition */
+    display: flex; /* Use Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.hero-content {
+    text-align: center; /* Center text */
+    color: white; /* White text for contrast */
+    padding: 20px; /* Padding for the content */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+    border-radius: 10px; /* Rounded corners for style */
+}
+
+.cta-button {
+    background-color: #ffcc00; /* Yellow background for CTA */
+    color: black; /* Text color */
+    padding: 10px 20px; /* Padding for the button */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    font-weight: bold; /* Bold text */
+    transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+.cta-button:hover {
+    background-color: #ff9900; /* Darker yellow on hover */
 }
 
 .profile-image {
@@ -162,6 +219,8 @@ body {
 .banner-container {
     text-align: center; /* Center align the content */
     padding: 0px; /* Add some padding if needed */
+    background-color: #333333;
+    font-size: 70px;
 }
 
 .banner-container img {
