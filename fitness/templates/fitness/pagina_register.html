@@ -1,0 +1,62 @@
+{% extends "./index.html" %}
+
+{% block title %}Registar Conta{% endblock %}
+
+{% block nav %}
+<nav class="topnav">
+    <a href="{% url 'fitness:index' %}">Home Page</a>
+    <a href="{% url 'fitness:forum' %}">Discussions/Forum</a>
+    <a href="{% url 'fitness:login_users' %}">Login</a>
+</nav>
+<br>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Registar Utilizador</h2>
+    <form action="{% url 'fitness:register_users' %}" method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="type-user">Tipo de User:</label>
+       <select id="type-user" name="type-user" required>
+            {% for user_type in user_types %}
+            <option value="{{ user_type.0 }}">{{ user_type.1 }}</option>
+            {% endfor %}
+       </select>
+
+        <div id="cliente-inputs">
+            <label for="cliente-meta">Meta:</label>
+            <input type="text" id="cliente-meta" name="cliente-meta" required><br>
+
+            <label for="cliente-horarios">Horários de Treino:</label>
+            <input type="text" id="cliente-horarios" name="cliente-horarios"><br>
+        </div>
+
+        <div id="funcionario-inputs" style="display: none;">
+            <label for="funcionario-cargo">Cargo:</label>
+            <input type="text" id="funcionario-cargo" name="funcionario-cargo"><br>
+
+            <label for="funcionario-horario">Horário:</label>
+            <input type="text" id="funcionario-horario" name="funcionario-horario"><br>
+        </div>
+
+        <br><br>
+        <button type="submit" class="confirm-button">Registar</button>
+        <a href="{% url 'fitness:login_users' %}"><button type="button" class="cancel-button">Cancel</button></a>
+    </form>
+</div>
+
+<!--<div class="form-container">
+    <label for="comentario" id="label_commentario">Comentário</label><br>
+    <textarea name="comentario" id="comentario" cols="30" rows="10"></textarea><br>
+    <button class="Validar">Validar Comentário</button>
+</div>-->
+{% endblock %}

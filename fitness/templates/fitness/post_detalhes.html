@@ -1,0 +1,95 @@
+{% extends "./index.html" %}
+
+{% block title %}Detalhes do Post{% endblock %}
+
+{% block styles %}
+/* Styling for Post Details */
+.post-details {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+/* Styling for Comments Section */
+.comments {
+    background-color: #f1f1f1;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+/* Styling for Add Comment Form */
+.add-comment {
+    background-color: #e8e8e8;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Styling for Profile Pictures */
+.profile-picture {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 2px;
+    margin-left: 10px;
+}
+
+/* Styling for Comments */
+.comment {
+    border-bottom: 1px solid #ddd; /* Add border bottom to separate comments */
+    padding-top: 10px;
+}
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="post-details">
+    <div class="post-header">
+        <h2>{{ post.titulo }}</h2>
+        <p>Autor:
+            {% if post.autor.profile_picture %}
+                <img class="profile-picture" src="{{ post.autor.profile_picture.url }}" alt="Profile Picture"></a>
+            {% endif %}
+            {{ post.autor }}
+        </p>
+        <p>Data de Publicação: {{ post.pub_data }}</p>
+    </div>
+    <div class="post-description">
+        <p><h6>Descrição:</h6> {{ post.descricao }}</p>
+    </div>
+</div>
+
+<!-- Comments Section -->
+<div class="comments">
+    <h3>Comentários</h3>
+    {% if post.comentario_set %}
+        {% for comentario in post.comentario_set.all %}
+            <div class="comment">
+                <p>
+                    {% if comentario.autor.profile_picture %}
+                        <img class="profile-picture" src="{{ comentario.autor.profile_picture.url }}" alt="Profile Picture"></a>
+                    {% endif %}
+                    <strong>{{ comentario.autor }}</strong> - {{ comentario.pub_data }}
+                </p>
+                <p>{{ comentario.texto }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Não há comentários.</p>
+    {% endif %}
+</div>
+
+<!-- Form to Add Comment -->
+<div class="add-comment">
+    <h3>Adicionar Comentário</h3>
+    <form method="POST" action="{% url 'fitness:create_comentario' post.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="comment_texto">Texto:</label>
+            <textarea class="form-control" id="comment_texto" name="comment_texto" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>
+{% endblock %}

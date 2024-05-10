@@ -1,0 +1,34 @@
+{% extends "./index.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block nav %}
+<nav class="topnav">
+    <a href="{% url 'fitness:login_users' %}">Login</a>
+    <a href="{% url 'fitness:register_users' %}"> Registe uma nova conta</a>
+    <a href="{% url 'fitness:index' %}">Home Page</a>
+</nav>
+<br>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Faz Login para teres acesso a várias funcionalidades do nosso Website</h2>
+    {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    <form action="{% url 'fitness:login_users' %}" method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{ entered_username }}" placeholder="Username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" value="{{ entered_password }}" placeholder="Password"
+               required><br>
+        <br><br>
+        <button type="submit" class="confirm-button">Login</button>
+        <a href="{% url 'fitness:index' %}"><button type="button" class="cancel-button">Cancel</button></a>
+    </form>
+</div>
+<br><br>
+{% endblock %}
