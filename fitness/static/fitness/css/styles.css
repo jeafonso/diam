@@ -54,7 +54,7 @@ body {
 
 .hero-section {
     height: 80vh; /* 80% of viewport height */
-    background-image: url('../../../media/gym_stockphotos/pexels-ivan-samkov-4162451.jpg'); /* Background image */
+    background-image: url('../default_images/pexels-ivan-samkov-4162451.jpg'); /* Background image */
     background-size: cover; /* Cover the entire section */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat; /* No repetition */
