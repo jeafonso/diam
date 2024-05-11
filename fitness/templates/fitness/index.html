@@ -49,59 +49,82 @@
         {% endif %}
 
     <div class="notnav">
-        <p><br></p>
+        <br>
         <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="custom-container">
-                        <h1>Bem-vindo à nossa Comunidade de Fitness e Ginásio</h1>
-                        <p>
-                            Aqui encontrarás uma variedade de recursos e funcionalidades para te ajudar a alcançar os teus objetivos de fitness e bem-estar. Explora as seguintes áreas:
-                        </p>
-                        <h2><a href="{% url 'fitness:user_info' %}">1. Perfis de Membros</a></h2>
-                        <p>
-                            Cria o teu perfil personalizado para acompanhar o teu progresso, definir metas e interagir com outros membros da comunidade.
-                        </p>
-                        <br>
-                        <h2>2. Agendamento de Aulas e Treinos</h2>
-                        <p>
-                            Reserva o teu lugar em aulas de fitness e treinos especiais para maximizar os teus resultados e manter-te motivado.
-                        </p>
-                        <br>
-                        <h2><a href="{% url 'fitness:forum' %}">3. Comunidade e Fóruns de Discussão</a></h2>
-                        <p>
-                            Participa em discussões sobre fitness, nutrição e motivação, partilha dicas e obtém suporte dos membros e instrutores do ginásio.
-                        </p>
-                        <br>
-                        <h2>4. Desafios de Fitness e Recompensas</h2>
-                        <p>
-                            Envolva-te em desafios mensais para testar os teus limites e ganhar recompensas emocionantes.
-                        </p>
-                        <br>
-                        <h2><a href="">5. Recursos de Saúde e Bem-Estar</a></h2>
-                        <p>
-                            Acede a uma variedade de recursos, incluindo artigos, vídeos e receitas, para te ajudar a adotar um estilo de vida mais saudável.
-                        </p>
+            <div class="section">
+                <h2 class="text-center mb-4">Why Choose Us?</h2>
+                <div class="row justify-content-center">
+                    <div class="col-md-3">
+                        <div class="image-container-index">
+                            <img src="{% static 'fitness/default_images/gym_example1.jpeg' %}" alt="Image 1">
+                        </div>
+                        <div class="text-container">
+                            <h3>Great Equipment</h3>
+                            <p>We offer the best equipment with 5 different training zones, so you can experience the best in class</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="image-container-index">
+                            <img src="{% static 'fitness/default_images/gym_example2.jpeg' %}" alt="Image 2">
+                        </div>
+                        <div class="text-container">
+                            <h3>No Attachments</h3>
+                            <p>In DIAM Gym, you have maximum possible flexibility when cancelling your membership</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="image-container-index">
+                            <img src="{% static 'fitness/default_images/gym_example3.jpeg' %}" alt="Image 3">
+                        </div>
+                        <div class="text-container">
+                            <h3>Best Gym Community</h3>
+                            <p>We are proud to have the best community in all the Gyms. Come try it out!</p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><a href="">Dicas de Exercícios</a></h5>
-                            <p class="card-text">Confere as nossas dicas de exercícios para diferentes objetivos de fitness.</p>
-                        </div>
-                    </div>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><a href="">Receitas Saudáveis</a></h5>
-                            <p class="card-text">Descobre receitas deliciosas e saudáveis para apoiar a tua jornada de fitness.</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title"><a href="">Artigos sobre Bem-Estar</a></h5>
-                            <p class="card-text">Lê artigos informativos sobre saúde, nutrição e bem-estar para te manteres informado.</p>
-                        </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="container">
+            <h1>Still not convinced? Explore a little bit more of what we offer!</h1>
+        </div>
+
+        <br>
+        <br>
+        <p><br></p>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="custom-container">
+                        <h2><a href="{% url 'fitness:user_info' %}">Member Profiles</a></h2>
+                        <p>
+                            Create your own profile, so you can keep track of your progress, set goals and interact with other DIAM Gym community members!
+                        </p>
+                        <br>
+                        <h2>Schedule your Workouts</h2>
+                        <p>
+                            Reserve your spot in our fitness classes and special trainings, so you can maximize your results and stay motivated
+                        </p>
+                        <br>
+                        <h2><a href="{% url 'fitness:forum' %}">Community and Discussion Forum</a></h2>
+                        <p>
+                            Discuss fitness, nutrition and whatever keeps you motivated, share training and diet tips, receive support from other members of the community and DIAM gym instructors.
+                        </p>
+                        <br>
+                        <h2>Fitness Challenges and Rewards</h2>
+                        <p>
+                            Stay up to date with monthly challenges to test your limits and gain awesome and exiting rewards!
+                        </p>
+                        <br>
+                        <h2><a href="">Health and Training Resources</a></h2>
+                        <p>
+                            Access a variety of resources, going from nutrition, training, recipes and share your own, so you can adopt a more healthy lifestyle.
+                        </p>
                     </div>
                 </div>
             </div>

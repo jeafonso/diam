@@ -268,3 +268,32 @@ body {
     border-radius: 10px; /* Add rounded corners */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
+
+/* Custom CSS for Image Section */
+.image-container-index {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.image-container-index img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.text-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.image-container-index:hover .image-overlay-index {
+    opacity: 1;
+}
+
+.image-container-index:hover img {
+    transform: scale(1.05);
+}
