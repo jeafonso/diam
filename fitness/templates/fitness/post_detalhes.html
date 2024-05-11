@@ -50,7 +50,7 @@
         <br>
         <p> <strong>Author</strong>:
             {% if post.autor.profile_picture %}
-                <img class="profile-picture" src="{{ post.autor.profile_picture.url }}" alt="Profile Picture"></a>
+                <img class="profile-picture" src="{{ post.autor.profile_picture.url }}" alt="Profile Picture">
             {% endif %}
             {{ post.autor }}
         </p>
@@ -90,7 +90,7 @@
             <label for="comment_texto">Text:</label>
             <textarea class="form-control" id="comment_texto" name="comment_texto" rows="3"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="submit" class="btn btn-primary">Send</button>
     </form>
 </div>
 {% endblock %}

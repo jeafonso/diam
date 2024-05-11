@@ -111,6 +111,29 @@ def post_detalhes(request, post_id):
     return render(request, 'fitness/post_detalhes.html', context)
 
 
+def resource_details(request, resource_id):
+    resource = get_object_or_404(Resource, pk=resource_id)
+    utilizador = None
+
+    # Se estiver logado e for cliente
+    if request.session.get('cliente_id') is not None:
+        cliente_id = request.session.get('cliente_id')
+        cliente = get_object_or_404(Cliente, pk=cliente_id)
+        utilizador = get_object_or_404(Utilizador, user_id=cliente.utilizador.user.id)
+
+    # Se estiver logado e for funcionário
+    if request.session.get('funcionario_id') is not None:
+        funcionario_id = request.session.get('funcionario_id')
+        funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
+        utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
+
+    context = {'resource': resource}
+    if utilizador:
+        context['utilizador'] = utilizador
+
+    return render(request, 'fitness/resource_detail.html', context)
+
+
 @login_required
 def create_post(request):
     if request.method == 'POST' and request.POST:
@@ -127,13 +150,13 @@ def create_post(request):
 @login_required
 def create_resource(request):
     if request.method == 'POST' and request.POST:
-
         title = request.POST['resource_title']
         description = request.POST['resource_description']
         author = get_object_or_404(Utilizador, user=request.user)
         resource_type = request.POST['resource_type']
 
-        resource = Resource(author=author, title=title, description=description, type=resource_type, pub_data=timezone.now())
+        resource = Resource(author=author, title=title, description=description, type=resource_type,
+                            pub_data=timezone.now())
         resource.save()
 
         return HttpResponseRedirect(reverse('fitness:resource_repository'))
@@ -149,6 +172,18 @@ def create_comentario(request, post_id):
 
         comentario = post.comentario_set.create(autor=autor, texto=texto_comentario, pub_data=timezone.now())
         return HttpResponseRedirect(reverse('fitness:post_detalhes', args=(post.id,)))
+
+
+@login_required
+def create_resource_comment(request, resource_id):
+    resource = get_object_or_404(Resource, pk=resource_id)
+
+    if request.method == 'POST' and request.POST:
+        comment_text = request.POST['comment_texto']
+        author = get_object_or_404(Utilizador, user=request.user)
+
+        comment = resource.commentary_set.create(author=author, texto=comment_text, pub_data=timezone.now())
+        return HttpResponseRedirect(reverse('fitness:resource_details', args=(resource.id,)))
 
 
 def register_users(request):

@@ -40,6 +40,55 @@
 {% block content %}
 {% load static %}
 
+<div class="post-details">
+    <div class="post-header">
+        <h2>{{ resource.title }}</h2>
+        <br>
+        <p> <strong>Author</strong>:
+            {% if resource.author.profile_picture %}
+                <img class="profile-picture" src="{{ resource.author.profile_picture.url }}" alt="Profile Picture">
+            {% endif %}
+            {{ resource.author }}
+        </p>
+        <br>
+        <p><strong>Resource Type</strong>: {{ resource.type }}</p>
+        <br>
+        <p><strong>Date</strong>: {{ resource.pub_data }}</p>
+    </div>
+    <div class="post-description">
+        <p><h6><strong>Description</strong>:</h6> {{ resource.description }}</p>
+    </div>
+</div>
 
+<div class="comments">
+    <h3>Comments</h3>
+    {% if resource.commentary_set %}
+        {% for item in resource.commentary_set.all %}
+            <div class="comment">
+                <p>
+                    {% if item.author.profile_picture %}
+                        <img class="profile-picture" src="{{ item.author.profile_picture.url }}" alt="Profile Picture"></a>
+                    {% endif %}
+                    <strong>{{ item.author }}</strong> - {{ item.pub_data }}
+                </p>
+                <p>{{ item.texto }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No comments for this Resource.</p>
+    {% endif %}
+</div>
+
+<div class="add-comment">
+    <h3>Add Comment</h3>
+    <form method="POST" action="{% url 'fitness:create_resource_comment' resource.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="comment_texto">Text:</label>
+            <textarea class="form-control" id="comment_texto" name="comment_texto" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+</div>
 
 {% endblock %}

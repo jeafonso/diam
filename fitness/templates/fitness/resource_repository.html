@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h1 class="mt-5 mb-4">Available Resources</h1>
+<h1 class="mt-5 mb-4">Available Shared Resources</h1>
 
 {% if resource_repository_list %}
         <div class="table-responsive">
@@ -19,14 +19,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for resource in resource_repository_list %}
+                    {% for item in resource_repository_list %}
                         <tr>
-                            <td><a href="">{{ resource.title }}</a></td>
-                            <td>{{ resource.type }}</td>
-                            <td>{{ resource.author }}</td>
-                            <td>{{ resource.pub_data }}</td>
+                            <td><a href="{% url 'fitness:resource_details' item.id %}">{{ item.title }}</a></td>
+                            <td>{{ item.type }}</td>
+                            <td>{{ item.author }}</td>
+                            <td>{{ item.pub_data }}</td>
                             <td>
-                                <span class="badge badge-primary" style="background-color: #004085;">{{ resource.comentario_set.count }}</span>
+                                <span class="badge badge-primary" style="background-color: #004085;">{{ item.commentary_set.count }}</span>
                             </td>
                         </tr>
                     {% endfor %}

@@ -131,3 +131,13 @@ class Resource(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Commentary(models.Model):
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
+    author = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    texto = models.TextField(default="")
+    pub_data = models.DateTimeField('data de publicacao')
+
+    def __str__(self):
+        return self.texto
