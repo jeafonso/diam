@@ -47,22 +47,23 @@
 <div class="post-details">
     <div class="post-header">
         <h2>{{ post.titulo }}</h2>
-        <p>Autor:
+        <br>
+        <p> <strong>Author</strong>:
             {% if post.autor.profile_picture %}
                 <img class="profile-picture" src="{{ post.autor.profile_picture.url }}" alt="Profile Picture"></a>
             {% endif %}
             {{ post.autor }}
         </p>
-        <p>Data de Publicação: {{ post.pub_data }}</p>
+        <p><strong>Date</strong>: {{ post.pub_data }}</p>
     </div>
     <div class="post-description">
-        <p><h6>Descrição:</h6> {{ post.descricao }}</p>
+        <p><h6><strong>Description</strong>:</h6> {{ post.descricao }}</p>
     </div>
 </div>
 
 <!-- Comments Section -->
 <div class="comments">
-    <h3>Comentários</h3>
+    <h3>Comments</h3>
     {% if post.comentario_set %}
         {% for comentario in post.comentario_set.all %}
             <div class="comment">
@@ -76,17 +77,17 @@
             </div>
         {% endfor %}
     {% else %}
-        <p>Não há comentários.</p>
+        <p>No comments for this post.</p>
     {% endif %}
 </div>
 
 <!-- Form to Add Comment -->
 <div class="add-comment">
-    <h3>Adicionar Comentário</h3>
+    <h3>Add Comment</h3>
     <form method="POST" action="{% url 'fitness:create_comentario' post.id %}">
         {% csrf_token %}
         <div class="form-group">
-            <label for="comment_texto">Texto:</label>
+            <label for="comment_texto">Text:</label>
             <textarea class="form-control" id="comment_texto" name="comment_texto" rows="3"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Enviar</button>
