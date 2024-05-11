@@ -9,7 +9,6 @@ body {
     font-family: Arial, sans-serif; /* Use a common sans-serif font */
     background-color: #f5f5f5; /* Set a light gray background color */
     font-size: 18px;
-    min-height: 150vh; /* Set the minimum height to 100% of the viewport height */
 }
 
 .header {
@@ -23,8 +22,6 @@ body {
     background-color: rgba(255, 255, 255, 0.1); /* White background with 50% opacity */
     background-repeat: no-repeat; /* Prevent the background image from repeating */
     background-size: cover; /* Cover the entire background area */
-    height: 150vh;
-    /*opacity: 0.5; */
 }
 
 .header-nav-container {
