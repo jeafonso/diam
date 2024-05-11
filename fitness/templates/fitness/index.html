@@ -110,22 +110,38 @@
                             Create your own profile, so you can keep track of your progress, set goals and interact with other DIAM Gym community members!
                         </p>
                         <br>
-                        <h2><a href="">Schedule your Workouts</a></h2>
+                        {% if not request.user.is_authenticated %}
+                            <h2><a href="{% url 'fitness:user_info' %}">Schedule your Workouts</a></h2>
+                        {% else %}
+                            <h2><a href="">Schedule your Workouts</a></h2>
+                        {% endif %}
                         <p>
                             Reserve your spot in our fitness classes and special trainings, so you can maximize your results and stay motivated
                         </p>
                         <br>
-                        <h2><a href="{% url 'fitness:forum' %}">Community and Discussion Forum</a></h2>
+                        {% if not request.user.is_authenticated %}
+                            <h2><a href="{% url 'fitness:user_info' %}">Community and Discussion Forum</a></h2>
+                        {% else %}
+                            <h2><a href="{% url 'fitness:forum' %}">Community and Discussion Forum</a></h2>
+                        {% endif %}
                         <p>
                             Discuss fitness, nutrition and whatever keeps you motivated, share training and diet tips, receive support from other members of the community and DIAM gym instructors.
                         </p>
                         <br>
-                        <h2><a href="">Fitness Challenges and Rewards</a></h2>
+                        {% if not request.user.is_authenticated %}
+                            <h2><a href="{% url 'fitness:user_info' %}">Fitness Challenges and Rewards</a></h2>
+                        {% else %}
+                            <h2><a href="">Fitness Challenges and Rewards</a></h2>
+                        {% endif %}
                         <p>
                             Stay up to date with monthly challenges to test your limits and gain awesome and exiting rewards!
                         </p>
                         <br>
-                        <h2><a href="">Health and Training Resources</a></h2>
+                        {% if not request.user.is_authenticated %}
+                            <h2><a href="{% url 'fitness:user_info' %}">Health and Training Resources</a></h2>
+                        {% else %}
+                            <h2><a href="">Health and Training Resources</a></h2>
+                        {% endif %}
                         <p>
                             Access a variety of resources, going from nutrition, training, recipes and share your own, so you can adopt a more healthy lifestyle.
                         </p>
