@@ -22,86 +22,105 @@
 
 {% block content %}
 {% load static %}
-<div class="form-container">
-
+<div class="container">
     <div class="alert alert-secondary form-text" role="alert">
-        <h2>Informações da Conta</h2>
+        <h2>Account Information</h2>
     </div>
 
-    <form id="myForm" action="{% url 'fitness:user_info' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form id="myForm" action="{% url 'fitness:user_info' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
 
-        <div class="pfp">
-            <label for="profile_picture">Foto de Perfil:</label><br>
-            <div class="image-container" onmouseover="showText()" onmouseout="hideText()">
-                <img id="profile-image" src="{% if utilizador.profile_picture %}{{ utilizador.profile_picture.url }}{% else %}
-                {% static 'fitness/default_images/default_pfp.jpg' %}{% endif %}" alt="Profile Picture">
-                <span class="overlay-text">Editar Foto de Perfil</span>
+                        <div class="mb-3">
+                            <label for="profile_picture" class="form-label">Profile Picture:</label><br>
+                            <div class="image-container" onmouseover="showText()" onmouseout="hideText()">
+                                <img id="profile-image" src="{% if utilizador.profile_picture %}{{ utilizador.profile_picture.url }}{% else %}
+                                    {% static 'fitness/default_images/default_pfp.jpg' %}{% endif %}" alt="Profile Picture">
+                                <span class="overlay-text">Edit</span>
+                            </div>
+                            <input type="file" id="profile_picture" name="profile_picture" style="display: none;" accept="image/*">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" id="email" name="email" value="{{ request.user.email }}" class="form-control" readonly>
+                            <button type="button" onclick="editField('email')" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" id="username" name="username" value="{{ request.user.username }}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" id="password" name="password" placeholder="Press to edit" class="form-control" readonly>
+                            <button type="button" onclick="changePassword()" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">Name:</label>
+                            <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}" class="form-control" readonly>
+                            <button type="button" onclick="editField('first_name')" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Surname:</label>
+                            <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}" class="form-control" readonly>
+                            <button type="button" onclick="editField('last_name')" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        {% if cliente %}
+                        <div class="mb-3">
+                            <label for="meta" class="form-label">Initial goals:</label>
+                            <textarea id="meta" name="meta" class="form-control" readonly>{{ cliente.meta }}</textarea>
+                            <button type="button" onclick="editField('meta')" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="horario_treino" class="form-label">Training schedule:</label>
+                            <input type="text" id="horario_treino" name="horario_treino" value="{{ cliente.horario_treino }}" class="form-control" readonly>
+                            <button type="button" onclick="editField('horario_treino')" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="progresso_fitness" class="form-label">New training progress:</label>
+                            <textarea id="progresso_fitness" name="progresso_fitness" class="form-control" readonly>{{ cliente.progresso_fitness }}</textarea>
+                            <button type="button" onclick="editField('progresso_fitness')" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="desafio" class="form-label">Challenges:</label>
+                            <textarea id="desafio" name="desafio" class="form-control" readonly>{{ cliente.desafio }}</textarea>
+                            <button type="button" onclick="editField('desafio')" class="btn btn-secondary">Edit</button>
+                        </div>
+                        {% else %}
+                        <div class="mb-3">
+                            <label for="cargo" class="form-label">Position:</label>
+                            <textarea id="cargo" name="cargo" class="form-control" readonly>{{ funcionario.cargo }}</textarea>
+                            <button type="button" onclick="editField('cargo')" class="btn btn-secondary">Edit</button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="horario_trabalho" class="form-label">Working hours:</label>
+                            <input type="text" id="horario_trabalho" name="horario_trabalho" value="{{ funcionario.horario_trabalho }}" class="form-control" readonly>
+                            <button type="button" onclick="editField('horario_trabalho')" class="btn btn-secondary">Edit</button>
+                        </div>
+                        {% endif %}
+
+                        <div class="form-buttons">
+                            <input type="submit" id="saveBtn" value="Save" class="btn btn-primary">
+                            <a href="{% url 'fitness:index' %}" class="btn btn-secondary">
+                                <button id="cancelBtn" type="button">Cancel</button>
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <input type="file" id="profile_picture" name="profile_picture" style="display: none;" accept="image/*">
         </div>
-
-        <p><label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="{{ request.user.email }}" readonly>
-            <button type="button" onclick="editField('email')">Edit</button>
-        </p>
-
-        <p><label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="{{ request.user.username }}" readonly>
-
-        <p><label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Pressiona Edit para mudar" readonly>
-            <button type="button" onclick="changePassword()">Edit</button>
-        </p>
-
-        <p><label for="first_name">Nome:</label>
-            <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}" readonly>
-            <button type="button" onclick="editField('first_name')">Edit</button>
-        </p>
-
-        <p><label for="last_name">Apelido:</label>
-            <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}" readonly>
-            <button type="button" onclick="editField('last_name')">Edit</button>
-        </p>
-
-        {% if cliente %}
-        <p><label for="meta">Metas estabelecidas no início:</label>
-            <textarea id="meta" name="meta" readonly>{{ cliente.meta }}</textarea>
-            <button type="button" onclick="editField('meta')">Edit</button>
-        </p>
-
-        <p><label for="horario_treino">Horario de treino:</label>
-            <input type="text" id="horario_treino" name="horario_treino" value="{{ cliente.horario_treino }}" readonly>
-            <button type="button" onclick="editField('horario_treino')">Edit</button>
-        </p>
-
-        <p><label for="progresso_fitness">Novos progressos no treino:</label>
-            <textarea id="progresso_fitness" name="progresso_fitness" readonly>{{ cliente.progresso_fitness }}</textarea>
-            <button type="button" onclick="editField('progresso_fitness')">Edit</button>
-        </p>
-
-        <p><label for="desafio">Desafios:</label>
-            <textarea id="desafio" name="desafio" readonly>{{ cliente.desafio }}</textarea>
-            <button type="button" onclick="editField('desafio')">Edit</button>
-        </p>
-        {% else %}
-        <p><label for="cargo">Cargo:</label>
-            <textarea id="cargo" name="cargo" readonly>{{ funcionario.cargo }}</textarea>
-            <button type="button" onclick="editField('cargo')">Edit</button>
-        </p>
-
-        <p><label for="horario_trabalho">Horário de trabalho:</label>
-            <input type="text" id="horario_trabalho" name="horario_trabalho" value="{{ funcionario.horario_trabalho }}" readonly>
-            <button type="button" onclick="editField('horario_trabalho')">Edit</button>
-        </p>
-        {% endif %}
-
-        <div class="form-buttons">
-            <input type="submit" id="saveBtn" value="Save" style="display: none;" class="confirm-button">
-            <a href="{% url 'fitness:user_info' %}">
-                <button id="cancelBtn" type="button" style="display: none;" class="cancel-button">Cancel</button>
-            </a>
-        </div>
-    </form>
+    </div>
 </div>
 {% endblock %}
