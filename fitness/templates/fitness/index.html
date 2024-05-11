@@ -113,7 +113,7 @@
                         {% if not request.user.is_authenticated %}
                             <h2><a href="{% url 'fitness:user_info' %}">Schedule your Workouts</a></h2>
                         {% else %}
-                            <h2><a href="{% url 'fitness:class_page' %}">Schedule your Workouts</a></h2>
+                            <h2><a href="{% url 'fitness:schedule_workout' %}">Schedule your Workouts</a></h2>
                         {% endif %}
                         <p>
                             Reserve your spot in our fitness classes and special trainings, so you can maximize your results and stay motivated

@@ -33,6 +33,6 @@ urlpatterns = [
     # ex: fitness/forum/11/comment
     path('resource_repository/<int:resource_id>/create_resource_comment', views.create_resource_comment,
          name='create_resource_comment'),
-    path('signup/<int:aula_id>/', views.class_signup, name='class_signup'),
-    path('desafios', views.class_page, name='class_page')
+    # ex: fitness/forum
+    path('schedule_workout', views.schedule_workout, name='schedule_workout'),
 ]

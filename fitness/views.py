@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.template.defaultfilters import register
 from django.urls import reverse
 from django.utils import timezone
 from .models import *
@@ -36,22 +37,41 @@ def index(request):
     return render(request, 'fitness/index.html', context)
 
 
-def class_page(request):
-    aulas = Aula.objects.all()
-    return render(request, 'fitness/marcar_aulas.html', {"aulas": aulas})
+def schedule_workout(request):
+    utilizador = None
+
+    # Se estiver logado e for cliente
+    if request.session.get('cliente_id') is not None:
+        cliente_id = request.session.get('cliente_id')
+        cliente = get_object_or_404(Cliente, pk=cliente_id)
+        utilizador = get_object_or_404(Utilizador, user_id=cliente.utilizador.user.id)
+
+    # Se estiver logado e for funcionário
+    if request.session.get('funcionario_id') is not None:
+        funcionario_id = request.session.get('funcionario_id')
+        funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
+        utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
+
+    monday_classes = {}
+    tuesday_classes = {}
+    wednesday_classes = {}
+    thursday_classes = {}
+    friday_classes = {}
+    saturday_classes = {}
+
+    context = {'monday_classes': monday_classes, 'tuesday_classes': tuesday_classes,
+               'wednesday_classes': wednesday_classes, 'thursday_classes': thursday_classes,
+               'friday_classes': friday_classes, 'saturday_classes': saturday_classes}
+
+    if utilizador:
+        context['utilizador'] = utilizador
+
+    return render(request, 'fitness/schedule_workout.html', context)
 
 
-def class_signup(request, aula_id):
-    aula = Aula.objects.get(id=aula_id)
-    if request.user.is_authenticated and request.method == 'POST':
-        if aula.participantes.count() < aula.max_participantes:
-            aula.participantes.add(request.user)
-            return render(request, 'fitness/marcar_aulas.html')  # Redirect to class schedule page
-        else:
-            error_message = "Class is full!"
-            return render(request, 'fitness/signup_error.html', {'error_message': error_message})
-    else:
-        return render(request, 'fitness/pagina_login.html')
+@register.filter(name='times')
+def times(start, end):
+    return range(start, end)
 
 
 def forum(request):
