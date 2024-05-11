@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
@@ -34,6 +34,24 @@ def index(request):
     if utilizador:
         context = {'utilizador': utilizador}
     return render(request, 'fitness/index.html', context)
+
+
+def class_page(request):
+    aulas = Aula.objects.all()
+    return render(request, 'fitness/marcar_aulas.html', {"aulas": aulas})
+
+
+def class_signup(request, aula_id):
+    aula = Aula.objects.get(id=aula_id)
+    if request.user.is_authenticated and request.method == 'POST':
+        if aula.participantes.count() < aula.max_participantes:
+            aula.participantes.add(request.user)
+            return render(request, 'fitness/marcar_aulas.html')  # Redirect to class schedule page
+        else:
+            error_message = "Class is full!"
+            return render(request, 'fitness/signup_error.html', {'error_message': error_message})
+    else:
+        return render(request, 'fitness/pagina_login.html')
 
 
 def forum(request):

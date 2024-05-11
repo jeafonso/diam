@@ -1,0 +1,31 @@
+<!-- class_schedule.html -->
+{% extends './index.html' %}
+
+{% block content %}
+<h2>Class Schedule</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Instructor</th>
+            <th>Time</th>
+            <th>Sign Up</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for aula in aulas %}
+        <tr>
+            <td>{{ aula.nome }}</td>
+            <td>{{ aula.descricao }}</td>
+            <td>{{ aula.instrutor }}</td>
+            <td>{{ aula.horario }}</td>
+            <td>
+                <a href="{% url 'fitness:class_signup' aula.id %}">
+                    <button type="submit">Sign Up</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
