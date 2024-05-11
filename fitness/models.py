@@ -9,6 +9,17 @@ from enum import Enum
 from django.templatetags.static import static
 
 
+class TypesOfResource(Enum):
+    WORKOUT = 'workout'
+    NUTRITION = 'nutrition'
+    HEALTH = 'health'
+    MISCELLANEA = 'miscellanea'
+
+    @classmethod
+    def choices(cls):
+        return [(types.value, types.name) for types in cls]
+
+
 class TypesOfUtilizador(Enum):
     CLIENTE = 'cliente'  # Tipo de utilizador: Cliente
     FUNCIONARIO = 'funcionario'  # Tipo de utilizador: Funcionário
@@ -17,6 +28,7 @@ class TypesOfUtilizador(Enum):
     def choices(cls):
         return [(types.value, types.name) for types in cls]
 
+
 class Cargo(Enum):
     INSTRUTOR = 'instrutor'  # Cargo: Instrutor
     RECECIONISTA = 'rececionista'  # Cargo: Rececionista
@@ -24,6 +36,7 @@ class Cargo(Enum):
     PT = 'pt'  # Cargo: Personal Trainer
     LIMPEZA = 'limpeza'  # Cargo: Limpeza
     NUTRICIONISTA = 'nutricionista'  # Cargo: Nutricionista
+
 
 # Utilizador
 class Utilizador(models.Model):
@@ -34,6 +47,7 @@ class Utilizador(models.Model):
     def __str__(self):
         # Retorna o nome do utilizador
         return self.user.username
+
 
 # Desafios
 class Desafio(models.Model):
@@ -48,6 +62,7 @@ class Desafio(models.Model):
         # Retorna o nome do desafio
         return self.nome
 
+
 # Cliente
 class Cliente(models.Model):
     utilizador = models.OneToOneField(Utilizador, on_delete=models.CASCADE)
@@ -59,6 +74,7 @@ class Cliente(models.Model):
         # Retorna o nome do cliente
         return self.utilizador.user.username
 
+
 # Funcionário
 class Funcionario(models.Model):
     utilizador = models.OneToOneField(Utilizador, on_delete=models.CASCADE)
@@ -68,6 +84,7 @@ class Funcionario(models.Model):
     def __str__(self):
         # Retorna o nome do funcionário
         return self.utilizador.user.username
+
 
 # Aulas/Treinos
 class Aula(models.Model):
@@ -82,6 +99,7 @@ class Aula(models.Model):
         # Retorna o nome da aula
         return self.nome
 
+
 # Posts do fórum
 class Post(models.Model):
     autor = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
@@ -93,7 +111,7 @@ class Post(models.Model):
         # Retorna o assunto do post
         return self.titulo
 
-# Comentários dos posts
+
 class Comentario(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     autor = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
@@ -101,5 +119,25 @@ class Comentario(models.Model):
     pub_data = models.DateTimeField('data de publicacao')
 
     def __str__(self):
-        # Retorna o texto do comentário
+        return self.texto
+
+
+class Resource(models.Model):
+    author = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    type = models.CharField(max_length=50)
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, default="")
+    pub_data = models.DateTimeField('data de publicacao')
+
+    def __str__(self):
+        return self.title
+
+
+class Commentary(models.Model):
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
+    author = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
+    texto = models.TextField(default="")
+    pub_data = models.DateTimeField('data de publicacao')
+
+    def __str__(self):
         return self.texto
