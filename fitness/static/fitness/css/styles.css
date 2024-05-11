@@ -297,3 +297,15 @@ body {
 .image-container-index:hover img {
     transform: scale(1.05);
 }
+
+/* Custom CSS for Footer */
+.social-icon {
+    font-size: 30px;
+    color: #fff;
+    margin: 0 10px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: translateY(-5px); /* Adjust the amount of jump */
+}
