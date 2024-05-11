@@ -130,10 +130,12 @@ $(document).ready(function() {
             $('#cliente-inputs').show();
             $('#funcionario-inputs').hide();
             $('#cliente-meta').prop('required', true);
+            $('#funcionario-cargo').prop('required', false);
         } else if (selectedType == 'funcionario') {
             $('#cliente-inputs').hide();
             $('#funcionario-inputs').show();
             $('#cliente-meta').prop('required', false);
+            $('#funcionario-cargo').prop('required', true);
         } else {
             $('#cliente-inputs').hide();
             $('#funcionario-inputs').hide();

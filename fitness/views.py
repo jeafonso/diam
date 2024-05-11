@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -51,9 +52,21 @@ def forum(request):
         funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
         utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
 
-    forum_post_list = Post.objects.order_by('-pub_data')[:10]
+    forum_post_list = Post.objects.order_by('-pub_data')
+    paginator = Paginator(forum_post_list, 10)  # Paginar a lista. 10 posts por página
+    page_number = request.GET.get('page')    # Número da página atual
 
-    context = {'forum_post_list': forum_post_list}
+    try:
+        # Retrieve the forum posts for the requested page
+        page_posts = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page
+        page_posts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g., 9999), deliver last page of results
+        page_posts = paginator.page(paginator.num_pages)
+
+    context = {'page_posts': page_posts}
     if utilizador:
         context['utilizador'] = utilizador
 
@@ -171,8 +184,9 @@ def register_users(request):
     # GET request ou renderização inicial
     else:
         user_types = TypesOfUtilizador.choices()
+        funcionario_cargos = Cargos.choices()
         print(user_types)
-        context = {'user_types': user_types}
+        context = {'user_types': user_types, 'funcionario_cargos': funcionario_cargos}
         return render(request, 'fitness/pagina_register.html', context)
 
 

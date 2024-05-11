@@ -1,0 +1,35 @@
+{% extends "./pagina_conta.html" %}
+
+{% block title %}Desafios{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Mudar Password</h2>
+    {% if error_message %}
+    <p style="color: red"><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    <form action="{% url 'fitness:change_password' %}" method="post">
+        {% csrf_token %}
+        <p>
+            <label for="old_password">Password Atual:</label><br>
+            <input type="password" id="old_password" name="old_password" required><br>
+        </p>
+
+        <p>
+            <label for="new_password1">Nova Password:</label><br>
+            <input type="password" id="new_password1" name="new_password1" required placeholder="Inserir nova password"><br>
+        </p>
+
+        <p>
+            <label for="new_password2">Confirmar Nova Password:</label><br>
+            <input type="password" id="new_password2" name="new_password2" required
+                   placeholder="Confirmar nova password"><br>
+        </p>
+
+        <div>
+            <button type="submit" class="confirm-button">Mudar Password</button>
+            <a href="{% url 'fitness:user_info' %}"><button type="button" class="cancel-button">Cancel</button></a>
+        </div>
+    </form>
+</div>
+{% endblock %}
