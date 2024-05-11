@@ -3,16 +3,16 @@
 {% block title %}Fórum de Fitness{% endblock %}
 
 {% block content %}
-    <h1 class="mt-5 mb-4">Fórum para discussão de temas relevantes a fitness e ao ginásio</h1>
+    <h1 class="mt-5 mb-4">Discussion Forum</h1>
     {% if forum_post_list %}
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">Título</th>
-                        <th scope="col">Autor</th>
-                        <th scope="col">Data de Publicação</th>
-                        <th scope="col">Comentários</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Comments</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
             </table>
         </div>
     {% else %}
-        <p>Não há posts publicados.</p>
+        <p>Still no published posts.</p>
     {% endif %}
 
     <div class="text-center">

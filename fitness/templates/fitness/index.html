@@ -37,19 +37,20 @@
         </nav>
     </div>
 
-    <div class="hero-section">
-        <div class="hero-content">
-            <h1>Welcome to DIAM Gym</h1>
-            <p>Your journey to a healthier lifestyle starts here.</p>
-            <a href="{% url 'fitness:login_users' %}" class="cta-button">Get Started</a>
-        </div>
-    </div>
-
+    {% block content %}
+        {% if not request.user.is_authenticated %}
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1>Welcome to DIAM Gym</h1>
+                    <p>Your journey to a healthier lifestyle starts here.</p>
+                    <a href="{% url 'fitness:login_users' %}" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        {% endif %}
 
     <div class="notnav">
         <p><br></p>
         <div class="container">
-            {% block content %}
             <div class="row">
                 <div class="col-md-8">
                     <div class="custom-container">
