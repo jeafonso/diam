@@ -24,4 +24,8 @@ urlpatterns = [
     path('forum/<int:post_id>', views.post_detalhes, name='post_detalhes'),
     # ex: fitness/forum/11/comment
     path('forum/<int:post_id>/comment', views.create_comentario, name='create_comentario'),
+
+    path('signup/<int:aula_id>/', views.class_signup, name='class_signup'),
+
+    path('desafios', views.class_page, name='class_page')
 ]
