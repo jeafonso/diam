@@ -2,61 +2,66 @@
 
 {% block title %}Registar Conta{% endblock %}
 
-{% block nav %}
-<nav class="topnav">
-    <a href="{% url 'fitness:index' %}">Home Page</a>
-    <a href="{% url 'fitness:forum' %}">Discussions/Forum</a>
-    <a href="{% url 'fitness:login_users' %}">Login</a>
-</nav>
-<br>
-{% endblock %}
-
 {% block content %}
-<div class="form-container">
-    <h2>Registar Utilizador</h2>
-    <form action="{% url 'fitness:register_users' %}" method="post">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <h2 class="card-header text-center">Register User</h2>
+                <div class="card-body">
+                    <form action="{% url 'fitness:register_users' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" id="username" name="username" class="form-control" required>
+                        </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                        </div>
 
-        <label for="type-user">Tipo de User:</label>
-       <select id="type-user" name="type-user" required>
-            {% for user_type in user_types %}
-            <option value="{{ user_type.0 }}">{{ user_type.1 }}</option>
-            {% endfor %}
-       </select>
+                        <div class="mb-3">
+                            <label for="type-user" class="form-label">User Type:</label>
+                            <select id="type-user" name="type-user" class="form-control" required>
+                                {% for user_type in user_types %}
+                                <option value="{{ user_type.0 }}">{{ user_type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-        <div id="cliente-inputs">
-            <label for="cliente-meta">Meta:</label>
-            <input type="text" id="cliente-meta" name="cliente-meta" required><br>
+                        <div id="cliente-inputs" class="mb-3">
+                            <label for="cliente-meta" class="form-label">Goal:</label>
+                            <input type="text" id="cliente-meta" name="cliente-meta" class="form-control" required>
 
-            <label for="cliente-horarios">Horários de Treino:</label>
-            <input type="text" id="cliente-horarios" name="cliente-horarios"><br>
+                            <div id="cliente-horarios-div" class="mb-3">
+                                <label for="cliente-horarios" class="form-label">Preferred Training Slot:</label>
+                                <input type="text" id="cliente-horarios" name="cliente-horarios" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div id="funcionario-inputs" class="mb-3" style="display: none;">
+                            <label for="funcionario-cargo" class="form-label">Position:</label>
+                            <input type="text" id="funcionario-cargo" name="funcionario-cargo" class="form-control">
+
+                            <label for="funcionario-horario" class="form-label">Working Hours:</label>
+                            <input type="text" id="funcionario-horario" name="funcionario-horario" class="form-control">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <a href="{% url 'fitness:index' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div id="funcionario-inputs" style="display: none;">
-            <label for="funcionario-cargo">Cargo:</label>
-            <input type="text" id="funcionario-cargo" name="funcionario-cargo"><br>
-
-            <label for="funcionario-horario">Horário:</label>
-            <input type="text" id="funcionario-horario" name="funcionario-horario"><br>
-        </div>
-
-        <br><br>
-        <button type="submit" class="confirm-button">Registar</button>
-        <a href="{% url 'fitness:login_users' %}"><button type="button" class="cancel-button">Cancel</button></a>
-    </form>
+    </div>
 </div>
-
-<!--<div class="form-container">
-    <label for="comentario" id="label_commentario">Comentário</label><br>
-    <textarea name="comentario" id="comentario" cols="30" rows="10"></textarea><br>
-    <button class="Validar">Validar Comentário</button>
-</div>-->
 {% endblock %}

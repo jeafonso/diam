@@ -12,23 +12,38 @@
 {% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <h2>Faz Login para teres acesso a várias funcionalidades do nosso Website</h2>
-    {% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
-    {% endif %}
-    <form action="{% url 'fitness:login_users' %}" method="post">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="{{ entered_username }}" placeholder="Username" required><br>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <h2 class="card-header text-center">Login</h2>
+                {% if error_message %}
+                <p class="text-danger text-center"><strong>{{ error_message }}</strong></p>
+                {% endif %}
+                <div class="card-body">
+                    <form action="{% url 'fitness:login_users' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" id="username" name="username" value="{{ entered_username }}" class="form-control" placeholder="Username" required>
+                        </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="{{ entered_password }}" placeholder="Password"
-               required><br>
-        <br><br>
-        <button type="submit" class="confirm-button">Login</button>
-        <a href="{% url 'fitness:index' %}"><button type="button" class="cancel-button">Cancel</button></a>
-    </form>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" id="password" name="password" value="{{ entered_password }}" class="form-control" placeholder="Password" required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                            <a href="{% url 'fitness:index' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'fitness:register_users' %}" class="text-decoration-none">Don't have an account? Sign up!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<br><br>
 {% endblock %}

@@ -1,17 +1,15 @@
 {% extends "./index.html" %}
 
-{% block title %}Detalhes do Post{% endblock %}
+{% block title %}Resource Details{% endblock %}
 
 {% block styles %}
-/* Styling for Post Details */
-.post-details {
+.resource-details {
     background-color: #f9f9f9;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 10px;
 }
 
-/* Styling for Comments Section */
 .comments {
     background-color: #f1f1f1;
     padding: 20px;
@@ -19,14 +17,12 @@
     border-radius: 10px;
 }
 
-/* Styling for Add Comment Form */
 .add-comment {
     background-color: #e8e8e8;
     padding: 20px;
     border-radius: 10px;
 }
 
-/* Styling for Profile Pictures */
 .profile-picture {
     width: 30px;
     height: 30px;
@@ -35,56 +31,57 @@
     margin-left: 10px;
 }
 
-/* Styling for Comments */
 .comment {
-    border-bottom: 1px solid #ddd; /* Add border bottom to separate comments */
+    border-bottom: 1px solid #ddd;
     padding-top: 10px;
 }
 {% endblock %}
 
 {% block content %}
 {% load static %}
+
 <div class="post-details">
     <div class="post-header">
-        <h2>{{ post.titulo }}</h2>
+        <h2>{{ resource.title }}</h2>
         <br>
         <p> <strong>Author</strong>:
-            {% if post.autor.profile_picture %}
-                <img class="profile-picture" src="{{ post.autor.profile_picture.url }}" alt="Profile Picture">
+            {% if resource.author.profile_picture %}
+                <img class="profile-picture" src="{{ resource.author.profile_picture.url }}" alt="Profile Picture">
             {% endif %}
-            {{ post.autor }}
+            {{ resource.author }}
         </p>
-        <p><strong>Date</strong>: {{ post.pub_data }}</p>
+        <br>
+        <p><strong>Resource Type</strong>: {{ resource.type }}</p>
+        <br>
+        <p><strong>Date</strong>: {{ resource.pub_data }}</p>
     </div>
     <div class="post-description">
-        <p><h6><strong>Description</strong>:</h6> {{ post.descricao }}</p>
+        <p><h6><strong>Description</strong>:</h6> {{ resource.description }}</p>
     </div>
 </div>
 
-<!-- Comments Section -->
 <div class="comments">
     <h3>Comments</h3>
-    {% if post.comentario_set %}
-        {% for comentario in post.comentario_set.all %}
+    {% if resource.commentary_set %}
+        {% for item in resource.commentary_set.all %}
             <div class="comment">
                 <p>
-                    {% if comentario.autor.profile_picture %}
-                        <img class="profile-picture" src="{{ comentario.autor.profile_picture.url }}" alt="Profile Picture"></a>
+                    {% if item.author.profile_picture %}
+                        <img class="profile-picture" src="{{ item.author.profile_picture.url }}" alt="Profile Picture"></a>
                     {% endif %}
-                    <strong>{{ comentario.autor }}</strong> - {{ comentario.pub_data }}
+                    <strong>{{ item.author }}</strong> - {{ item.pub_data }}
                 </p>
-                <p>{{ comentario.texto }}</p>
+                <p>{{ item.texto }}</p>
             </div>
         {% endfor %}
     {% else %}
-        <p>No comments for this post.</p>
+        <p>No comments for this Resource.</p>
     {% endif %}
 </div>
 
-<!-- Form to Add Comment -->
 <div class="add-comment">
     <h3>Add Comment</h3>
-    <form method="POST" action="{% url 'fitness:create_comentario' post.id %}">
+    <form method="POST" action="{% url 'fitness:create_resource_comment' resource.id %}">
         {% csrf_token %}
         <div class="form-group">
             <label for="comment_texto">Text:</label>
@@ -93,4 +90,5 @@
         <button type="submit" class="btn btn-primary">Send</button>
     </form>
 </div>
+
 {% endblock %}
