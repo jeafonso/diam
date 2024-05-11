@@ -18,8 +18,12 @@ urlpatterns = [
     path('account/password', views.change_password, name='change_password'),
     # ex: fitness/forum
     path('forum', views.forum, name='forum'),
+    # ex: fitness/forum
+    path('resource_repository', views.resource_repository, name='resource_repository'),
     # ex: fitness/forum/new_Post
     path('forum/new_Post', views.create_post, name='create_post'),
+    # ex: fitness/forum/new_Post
+    path('forum/new_resource', views.create_resource, name='create_resource'),
     # ex: fitness/forum/11
     path('forum/<int:post_id>', views.post_detalhes, name='post_detalhes'),
     # ex: fitness/forum/11/comment

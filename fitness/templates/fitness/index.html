@@ -140,7 +140,7 @@
                         {% if not request.user.is_authenticated %}
                             <h2><a href="{% url 'fitness:user_info' %}">Health and Training Resources</a></h2>
                         {% else %}
-                            <h2><a href="">Health and Training Resources</a></h2>
+                            <h2><a href="{% url 'fitness:resource_repository' %}">Health and Training Resources</a></h2>
                         {% endif %}
                         <p>
                             Access a variety of resources, going from nutrition, training, recipes and share your own, so you can adopt a more healthy lifestyle.
