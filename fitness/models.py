@@ -29,13 +29,36 @@ class TypesOfUtilizador(Enum):
         return [(types.value, types.name) for types in cls]
 
 
-class Cargo(Enum):
+class Cargos(Enum):
     INSTRUTOR = 'instrutor'  # Cargo: Instrutor
     RECECIONISTA = 'rececionista'  # Cargo: Rececionista
     GERENTE = 'gerente'  # Cargo: Gerente
     PT = 'pt'  # Cargo: Personal Trainer
     LIMPEZA = 'limpeza'  # Cargo: Limpeza
     NUTRICIONISTA = 'nutricionista'  # Cargo: Nutricionista
+
+    @classmethod
+    def choices(cls):
+        return [(types.value, types.name) for types in cls]
+
+
+class TypesOfDesafio(Enum):
+    FITNESS = 'fitness'
+    NUTRITION = 'nutrition'
+    ENDURANCE = 'endurance'
+    STRENGTH = 'strength'
+    WEIGHT_LOSS = 'weight_loss'
+    FLEXIBILITY = 'flexibility'
+    CARDIO = 'cardio'
+    MUSCLE_GAIN = 'muscle_gain'
+    CORE_STABILITY = 'core_stability'
+    HIIT = 'hiit'
+    YOGA = 'yoga'
+    CROSSFIT = 'crossfit'
+
+    @classmethod
+    def choices(cls):
+        return [(types.value, types.name) for types in cls]
 
 
 # Utilizador
@@ -52,6 +75,7 @@ class Utilizador(models.Model):
 # Desafios
 class Desafio(models.Model):
     nome = models.CharField(max_length=200)
+    type = models.CharField(max_length=50, choices=[(types.value, types.name) for types in TypesOfDesafio])
     descricao = models.CharField(max_length=200)
     data_inicio = models.DateField('data de inicio')
     data_fim = models.DateField('data de encerramento')
@@ -78,7 +102,7 @@ class Cliente(models.Model):
 # Funcionário
 class Funcionario(models.Model):
     utilizador = models.OneToOneField(Utilizador, on_delete=models.CASCADE)
-    cargo = models.CharField(max_length=20, choices=[(cargos.value, cargos.name) for cargos in Cargo])
+    cargo = models.CharField(max_length=20, choices=[(cargos.value, cargos.name) for cargos in Cargos])
     horario_trabalho = models.DateTimeField('horario de trabalho', blank=True, null=True)
 
     def __str__(self):
@@ -93,7 +117,7 @@ class Aula(models.Model):
     instrutor = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
     horario = models.DateTimeField('horario de aula')
     max_participantes = models.IntegerField(default=0)
-    participantes = models.ManyToManyField(Cliente, related_name='aulas')
+    participantes = models.ManyToManyField(Utilizador, related_name='aulas')
 
     def __str__(self):
         # Retorna o nome da aula
@@ -124,7 +148,7 @@ class Comentario(models.Model):
 
 class Resource(models.Model):
     author = models.ForeignKey(Utilizador, on_delete=models.CASCADE)
-    type = models.CharField(max_length=50)
+    type = models.CharField(max_length=50, choices=[(types.value, types.name) for types in TypesOfResource])
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, default="")
     pub_data = models.DateTimeField('data de publicacao')
