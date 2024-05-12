@@ -65,11 +65,11 @@
                                 {% for attendee in workout.attendees.all %}
                                     <tr>
                                         <td>
-                                            {% if attendee.utilizador.profile_picture %}
-                                                <img class="profile-picture" src="{{ attendee.utilizador.profile_picture.url }}" alt="Profile Picture">
+                                            {% if attendee.user.profile_picture %}
+                                                <img class="profile-picture" src="{{ attendee.user.profile_picture.url }}" alt="Profile Picture">
                                             {% endif %}
                                         </td>
-                                        <td>{{ attendee.utilizador }}</td>
+                                        <td>{{ attendee.user }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

@@ -42,7 +42,6 @@ def index(request):
 
 def schedule_workout(request):
     utilizador = None
-    cliente = None
 
     # Se estiver logado e for cliente
     if request.session.get('cliente_id') is not None:
@@ -62,7 +61,7 @@ def schedule_workout(request):
 
         workout = Aula.objects.filter(name=inputValue)
         aula = workout[0]
-        addition = aula.attendees.add(cliente)
+        addition = aula.attendees.add(utilizador)
         aula.save()
 
     monday_classes = Aula.objects.filter(day='Monday')
@@ -155,6 +154,7 @@ def resource_repository(request):
         context['utilizador'] = utilizador
 
     return render(request, 'fitness/resource_repository.html', context)
+
 
 @login_required
 def gym_challenges(request):
@@ -282,6 +282,7 @@ def create_resource(request):
 
         return HttpResponseRedirect(reverse('fitness:resource_repository'))
 
+
 #@user_passes_test(admin_check)
 def create_desafio(request):
     if request.method == 'POST' and request.POST:
@@ -302,7 +303,6 @@ def create_desafio(request):
 @login_required
 def create_workout_class(request):
     if request.method == 'POST' and request.POST:
-
         name = request.POST['class_name']
         description = request.POST['class_description']
 
