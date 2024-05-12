@@ -29,7 +29,7 @@ class TypesOfUtilizador(Enum):
         return [(types.value, types.name) for types in cls]
 
 
-class Cargo(Enum):
+class Cargos(Enum):
     INSTRUTOR = 'instrutor'  # Cargo: Instrutor
     RECECIONISTA = 'rececionista'  # Cargo: Rececionista
     GERENTE = 'gerente'  # Cargo: Gerente
@@ -37,6 +37,9 @@ class Cargo(Enum):
     LIMPEZA = 'limpeza'  # Cargo: Limpeza
     NUTRICIONISTA = 'nutricionista'  # Cargo: Nutricionista
 
+    @classmethod
+    def choices(cls):
+        return [(types.value, types.name) for types in cls]
 
 # Utilizador
 class Utilizador(models.Model):
@@ -78,7 +81,7 @@ class Cliente(models.Model):
 # Funcionário
 class Funcionario(models.Model):
     utilizador = models.OneToOneField(Utilizador, on_delete=models.CASCADE)
-    cargo = models.CharField(max_length=20, choices=[(cargos.value, cargos.name) for cargos in Cargo])
+    cargo = models.CharField(max_length=20, choices=[(cargos.value, cargos.name) for cargos in Cargos])
     horario_trabalho = models.DateTimeField('horario de trabalho', blank=True, null=True)
 
     def __str__(self):

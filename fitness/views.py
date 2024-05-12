@@ -71,7 +71,7 @@ def forum(request):
         utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
 
     forum_post_list = Post.objects.order_by('-pub_data')
-    paginator = Paginator(forum_post_list, 10)  # Paginar a lista. 10 posts por página
+    paginator = Paginator(forum_post_list, 3)  # Paginar a lista. 10 posts por página
     page_number = request.GET.get('page')    # Número da página atual
 
     try:

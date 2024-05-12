@@ -4,7 +4,7 @@
 
 {% block content %}
     <h1 class="mt-5 mb-4">Discussion Forum</h1>
-    {% if forum_post_list %}
+    {% if page_posts %}
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead class="thead-dark">
@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for post in forum_post_list %}
+                    {% for post in page_posts %}
                         <tr>
                             <td><a href="{% url 'fitness:post_detalhes' post.id %}">{{ post.titulo }}</a></td>
                             <td>{{ post.autor }}</td>
@@ -29,10 +29,31 @@
                 </tbody>
             </table>
         </div>
+
+    <!-- Pagination links -->
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            {% if page_posts.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_posts.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            <li class="page-item active">
+                <span class="page-link">{{ page_posts.number }}</span>
+            </li>
+            {% if page_posts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_posts.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
     {% else %}
         <p>Still no published posts.</p>
     {% endif %}
 
+    <br>
+    <br>
     <div class="text-center">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
             Publish new Post
