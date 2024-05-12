@@ -8,6 +8,34 @@ from django.contrib.auth.models import User
 from enum import Enum
 from django.templatetags.static import static
 
+STARTING_TIMES = [
+    ('07:00', '07:00 AM'),
+    ('08:00', '08:00 AM'),
+    ('09:00', '09:00 AM'),
+    ('10:00', '10:00 AM'),
+    ('11:00', '11:00 AM'),
+    ('12:00', '12:00 PM'),
+    ('13:00', '01:00 PM'),
+    ('14:00', '02:00 PM'),
+    ('15:00', '03:00 PM'),
+    ('16:00', '04:00 PM'),
+    ('17:00', '05:00 PM'),
+    ('18:00', '06:00 PM'),
+    ('19:00', '07:00 PM'),
+    ('20:00', '08:00 PM'),
+    ('21:00', '09:00 PM'),
+    ('22:00', '10:00 PM'),
+]
+
+WEEK_DAYS = [
+    ('Monday', 'Monday'),
+    ('Tuesday', 'Tuesday'),
+    ('Wednesday', 'Wednesday'),
+    ('Thursday', 'Thursday'),
+    ('Friday', 'Friday'),
+    ('Saturday', 'Saturday')
+]
+
 
 class TypesOfResource(Enum):
     WORKOUT = 'workout'
@@ -86,18 +114,17 @@ class Funcionario(models.Model):
         return self.utilizador.user.username
 
 
-# Aulas/Treinos
 class Aula(models.Model):
-    nome = models.CharField(max_length=200)
-    descricao = models.CharField(max_length=200)
-    instrutor = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
-    horario = models.DateTimeField('horario de aula')
-    max_participantes = models.IntegerField(default=0)
-    participantes = models.ManyToManyField(Cliente, related_name='aulas')
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    instructor = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
+    start_time = models.CharField(max_length=5, choices=STARTING_TIMES)
+    day = models.CharField(max_length=20, choices=WEEK_DAYS)
+    max_attendees = models.IntegerField(default=0)
+    attendees = models.ManyToManyField(Cliente, related_name='aulas')
 
     def __str__(self):
-        # Retorna o nome da aula
-        return self.nome
+        return self.name
 
 
 # Posts do fórum

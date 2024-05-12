@@ -24,16 +24,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleSubmitButtonVisibility() {
         const submitButton = document.getElementById('submitButton');
         if (currentSelectedCell) {
-            submitButton.style.display = 'block'; // Show button if there is a selected cell
+            submitButton.style.display = 'block';
         } else {
-            submitButton.style.display = 'none'; // Hide button if no selected cell
+            submitButton.style.display = 'none';
         }
     }
 
     const allCells = document.querySelectorAll('td');
     allCells.forEach(cell => {
         cell.addEventListener('click', function() {
-            // Toggle visibility of submit button when cell is clicked
             toggleSubmitButtonVisibility();
         });
     });
@@ -57,7 +56,6 @@ function handleCellClick(day, hour) {
             }
 
             cellElement.classList.add('selected-cell');
-
             currentSelectedCell = cellElement;
         } else {
             console.error("Cell element not found:", cellId);

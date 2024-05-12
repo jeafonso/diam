@@ -4,9 +4,10 @@
 
 {% block styles %}
     table {
-        width: 100%;
+        width: 85%;
         border-collapse: collapse;
         font-family: Arial, sans-serif;
+        margin: 0 auto;
     }
 
     th, td {
@@ -48,6 +49,7 @@
 
 {% block content %}
 {% load static %}
+    <br>
     <h2 style="text-align: center; margin-bottom: 20px;">Weekly Workout Schedule</h2>
     <table id="scheduleTable">
         <thead>
@@ -66,48 +68,48 @@
                 <td>{{ hour }}:00</td>
                 <td id="monday_{{ hour }}">
                     {% for class in monday_classes %}
-                        {% if class.start_time.hour == hour and class.day == 'Monday' %}
-                            {{ class.title }}<br>
+                        {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Monday' %}
+                            {{ class.name }}<br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
                 </td>
                 <td id="tuesday_{{ hour }}">
                     {% for class in tuesday_classes %}
-                        {% if class.start_time.hour == hour and class.day == 'Tuesday' %}
-                            {{ class.title }}<br>
+                        {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Tuesday' %}
+                            {{ class.name }}<br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
                 </td>
                 <td id="wednesday_{{ hour }}">
                     {% for class in wednesday_classes %}
-                        {% if class.start_time.hour == hour and class.day == 'Wednesday' %}
-                            {{ class.title }}<br>
+                        {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Wednesday' %}
+                            {{ class.name }}<br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
                 </td>
                 <td id="thursday_{{ hour }}">
                     {% for class in thursday_classes %}
-                        {% if class.start_time.hour == hour and class.day == 'Thursday' %}
-                            {{ class.title }}<br>
+                        {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Thursday' %}
+                            {{ class.name }}<br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
                 </td>
                 <td id="friday_{{ hour }}">
                     {% for class in friday_classes %}
-                        {% if class.start_time.hour == hour and class.day == 'Friday' %}
-                            {{ class.title }}<br>
+                        {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Friday' %}
+                            {{ class.name }}<br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
                 </td>
                 <td id="saturday_{{ hour }}">
                     {% for class in saturday_classes %}
-                        {% if class.start_time.hour == hour and class.day == 'Saturday' %}
-                            {{ class.title }}<br>
+                        {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Saturday' %}
+                            {{ class.name }}<br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
@@ -117,7 +119,68 @@
     </table>
     <br>
     <br>
-    <button id="submitButton" style="display: none;" class="btn btn-primary">Submit Selected Workout</button>
+    <button id="submitButton" style="margin: 0 auto; display: none;" class="btn btn-primary">Schedule Selected Workout</button>
+
+    <div class="text-center">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Add new Workout Class
+        </button>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New Workout Class</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{% url 'fitness:create_workout_class' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="class_name">Class Name:</label>
+                                <input type="text" class="form-control" id="class_name" name="class_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="class_description">Class Description:</label>
+                                <textarea class="form-control" id="class_description" name="class_description" rows="5"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="instructor" class="form-label">Instructor:</label>
+                                <select id="instructor" name="instructor" class="form-control" required>
+                                    {% for instructor in instructors %}
+                                        <option value="{{ instructor.pk }}">{{ instructor.utilizador }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="starting_time" class="form-label">Starting Time:</label>
+                                <select id="starting_time" name="starting_time" class="form-control" required>
+                                    {% for time in starting_times %}
+                                        <option value="{{ time.0 }}">{{ time.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="week_day" class="form-label">Week Day:</label>
+                                <select id="week_day" name="week_day" class="form-control" required>
+                                    {% for day in week_days %}
+                                        <option value="{{ day.0 }}">{{ day.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="max_attendees">Max Attendees:</label>
+                                <input type="number" class="form-control" id="max_attendees" name="max_attendees">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Class</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <script defer src="{% static 'fitness/scripts/schedule_workout.js' %}?{% now 'U' %}"></script>
 {% endblock %}

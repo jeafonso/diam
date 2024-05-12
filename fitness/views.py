@@ -52,16 +52,23 @@ def schedule_workout(request):
         funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
         utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
 
-    monday_classes = {}
-    tuesday_classes = {}
-    wednesday_classes = {}
-    thursday_classes = {}
-    friday_classes = {}
-    saturday_classes = {}
+    monday_classes = Aula.objects.filter(day='Monday')
+    tuesday_classes = Aula.objects.filter(day='Tuesday')
+    wednesday_classes = Aula.objects.filter(day='Wednesday')
+    thursday_classes = Aula.objects.filter(day='Thursday')
+    friday_classes = Aula.objects.filter(day='Friday')
+    saturday_classes = Aula.objects.filter(day='Saturday')
+
+    starting_times = STARTING_TIMES
+    week_days = WEEK_DAYS
+    instructors = Funcionario.objects.all()
+
+    hours = [time[0] for time in STARTING_TIMES]
 
     context = {'monday_classes': monday_classes, 'tuesday_classes': tuesday_classes,
                'wednesday_classes': wednesday_classes, 'thursday_classes': thursday_classes,
-               'friday_classes': friday_classes, 'saturday_classes': saturday_classes}
+               'friday_classes': friday_classes, 'saturday_classes': saturday_classes, 'starting_times': starting_times,
+               'week_days': week_days, 'instructors': instructors, 'hours': hours}
 
     if utilizador:
         context['utilizador'] = utilizador
@@ -198,6 +205,27 @@ def create_resource(request):
         resource.save()
 
         return HttpResponseRedirect(reverse('fitness:resource_repository'))
+
+
+@login_required
+def create_workout_class(request):
+    if request.method == 'POST' and request.POST:
+
+        name = request.POST['class_name']
+        description = request.POST['class_description']
+
+        instructor_pk = request.POST.get('instructor')
+        instructor = get_object_or_404(Funcionario, id=instructor_pk)
+
+        starting_time = request.POST['starting_time']
+        week_day = request.POST['week_day']
+        max_attendees = request.POST['max_attendees']
+
+        workout_class = Aula(name=name, description=description, instructor=instructor, start_time=starting_time,
+                             day=week_day, max_attendees=max_attendees)
+        workout_class.save()
+
+        return HttpResponseRedirect(reverse('fitness:schedule_workout'))
 
 
 @login_required
