@@ -61,7 +61,6 @@
     </div>
 </div>
 
-<!-- Comments Section -->
 <div class="comments">
     <h3>Comments</h3>
     {% if post.comentario_set %}
@@ -81,7 +80,6 @@
     {% endif %}
 </div>
 
-<!-- Form to Add Comment -->
 <div class="add-comment">
     <h3>Add Comment</h3>
     <form method="POST" action="{% url 'fitness:create_comentario' post.id %}">
