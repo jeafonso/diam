@@ -3,61 +3,58 @@
 {% block title %}Workout Details{% endblock %}
 
 {% block styles %}
-.resource-details {
-    background-color: #f9f9f9;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-}
+<!-- Include Bootstrap CSS (Assuming you have Bootstrap linked in your base template) -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-.comments {
-    background-color: #f1f1f1;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-}
+<style>
+    .resource-details,
+    .comments,
+    .add-comment {
+        background-color: #f9f9f9;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
 
-.add-comment {
-    background-color: #e8e8e8;
-    padding: 20px;
-    border-radius: 10px;
-}
+    .comments {
+        background-color: #f1f1f1;
+    }
 
-.profile-picture {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 2px;
-    margin-left: 10px;
-}
+    .add-comment {
+        background-color: #e8e8e8;
+    }
 
-.comment {
-    border-bottom: 1px solid #ddd;
-    padding-top: 10px;
-}
+    .profile-picture {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 2px;
+        margin-left: 10px;
+    }
+
+    .comment {
+        border-bottom: 1px solid #ddd;
+        padding-top: 10px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 {% load static %}
 
-<div class="post-details">
-    <div class="post-header">
-        <h2>{{ workout.name }}</h2>
-        <br>
-        <p><strong>Instructor</strong>: {{ workout.instructor }}</p>
-        <br>
-        <p><strong>Start Time</strong>: {{ workout.start_time }}</p>
-        <br>
-        <p><strong>Day</strong>: {{ workout.day }}</p>
-        <br>
-        <p><strong>Maximum of Attendees</strong>: {{ workout.max_attendees }}</p>
-        <br>
-        {% if workout.attendees.exists %}
-            <p><strong>Attendees</strong>:</p>
-            <div class="row">
-                <div class="col-md-4">
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="resource-details">
+                <h2>{{ workout.name }}</h2>
+                <p><strong>Instructor</strong>: {{ workout.instructor }}</p>
+                <p><strong>Start Time</strong>: {{ workout.start_time }}</p>
+                <p><strong>Day</strong>: {{ workout.day }}</p>
+                <p><strong>Maximum Attendees</strong>: {{ workout.max_attendees }}</p>
+                {% if workout.attendees.exists %}
+                    <p><strong>Attendees Already registered for this class:</strong>:</p>
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped">
                             <thead class="thead-dark">
                                 <tr>
                                     <th></th>
@@ -69,7 +66,7 @@
                                     <tr>
                                         <td>
                                             {% if attendee.utilizador.profile_picture %}
-                                                <img class="profile-picture" src="{{ attendee.utilizador.profile_picture.url }}" alt="Profile Picture"></a>
+                                                <img class="profile-picture" src="{{ attendee.utilizador.profile_picture.url }}" alt="Profile Picture">
                                             {% endif %}
                                         </td>
                                         <td>{{ attendee.utilizador }}</td>
@@ -78,15 +75,23 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                {% else %}
+                    <p><strong>No attendees currently registered for this workout.</strong></p>
+                {% endif %}
             </div>
-        {% else %}
-            <p><strong>No attendees currently registered for this workout.</strong></p>
-        {% endif %}
-    </div>
-    <div class="post-description">
-        <p><h6><strong>Description</strong>:</h6> {{ workout.description }}</p>
+        </div>
+        <div class="col-md-4">
+            <div class="post-description">
+                <h4>Description</h4>
+                <p>{{ workout.description }}</p>
+            </div>
+        </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<!-- Include Bootstrap JS (if needed) -->
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 {% endblock %}
