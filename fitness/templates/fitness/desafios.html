@@ -27,9 +27,9 @@
                 <p><strong>Rules:</strong> {{ desafio.regras }}</p>
                 <p class="participant-container"><strong>Participants:</strong>
                     {% for participante in desafio.participantes.all %}
-                        <span class="badge badge-secondary">
+                        <span class="badge badge-secondary" style="background-color: {{ selected_color }};">
                             {% if participante.profile_picture %}
-                                <img class="profile-picture" src="{{ participante.profile_picture.url }}" alt="Profile Picture"></a>
+                                <img class="profile-picture" src="{{ participante.profile_picture.url }}" alt="Profile Picture">
                             {% endif %}
                             {{ participante }}
                         </span>

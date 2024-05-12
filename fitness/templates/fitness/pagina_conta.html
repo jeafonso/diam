@@ -2,24 +2,6 @@
 
 {% block title %}Informações da Conta{% endblock %}
 
-{% block nav %}
-{% load static %}
-<nav class="topnav">
-    {% if request.user.is_superuser %}
-        <a><span style="color: #ffcc00; font-weight: bold;">Username:
-            {{ request.user.username }} (Admin)</span></a>
-    {% else %}
-        <a><span class="username">{{ request.user.username }}</span>
-            <img class="profile-image" src="{% if utilizador.profile_picture %}{{ utilizador.profile_picture.url }}{% else %}
-            {% static 'fitness/default_images/default_pfp.jpg' %}{% endif %}" alt="Profile Picture"></a>
-    {% endif %}
-    <a href="{% url 'fitness:index' %}">Home Page</a>
-    <a href="{% url 'fitness:forum' %}">Discussions/Forum</a>
-    <a href="{% url 'fitness:user_info' %}">Detalhes da conta</a>
-    <a href="{% url 'fitness:logout_users' %}">Logout</a>
-</nav>
-{% endblock %}
-
 {% block content %}
 {% load static %}
 <div class="container">

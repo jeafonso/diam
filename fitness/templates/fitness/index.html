@@ -16,6 +16,13 @@
 <body>
     <style>
         {% block styles %}
+            .profile-picture {
+                width: 45px;
+                height: 45px;
+                border-radius: 70%;
+                margin-right: 2px;
+                margin-left: 10px;
+            }
         {% endblock %}
     </style>
 
@@ -23,7 +30,6 @@
         <header class="header">
             <a href="{% url 'fitness:index' %}" class="text-decoration-none text-white">DIAM Gym</a>
         </header>
-
 
         <nav class="topnav">
             {% if not request.user.is_authenticated %}
@@ -35,6 +41,11 @@
                 <a href="{% url 'fitness:forum' %}">Discussions</a>
                 <a href="{% url 'fitness:user_info' %}">Account</a>
                 <a href="{% url 'fitness:logout_users' %}">Logout</a>
+            {% endif %}
+
+            <!-- Include User's Profile Picture -->
+            {% if request.user.is_authenticated and utilizador.profile_picture %}
+                <img src="{{ utilizador.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
             {% endif %}
         </nav>
     </div>
