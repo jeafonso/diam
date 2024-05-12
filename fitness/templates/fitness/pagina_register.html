@@ -48,7 +48,11 @@
 
                         <div id="funcionario-inputs" class="mb-3" style="display: none;">
                             <label for="funcionario-cargo" class="form-label">Position:</label>
-                            <input type="text" id="funcionario-cargo" name="funcionario-cargo" class="form-control">
+                            <select id="funcionario-cargo" name="funcionario-cargo" class="form-control" required>
+                                {% for cargos in funcionario_cargos %}
+                                <option value="{{ cargos.0 }}">{{ cargos.1 }}</option>
+                                {% endfor %}
+                            </select>
 
                             <label for="funcionario-horario" class="form-label">Working Hours:</label>
                             <input type="text" id="funcionario-horario" name="funcionario-horario" class="form-control">
