@@ -34,7 +34,7 @@
                     <form id="myForm" action="{% url 'fitness:user_info' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <div class="mb-3">
+                        <div class="mb-3 mx-auto text-center">
                             <label for="profile_picture" class="form-label">Profile Picture:</label><br>
                             <div class="image-container" onmouseover="showText()" onmouseout="hideText()">
                                 <img id="profile-image" src="{% if utilizador.profile_picture %}{{ utilizador.profile_picture.url }}{% else %}

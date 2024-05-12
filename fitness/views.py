@@ -1,6 +1,7 @@
 import json
 
-from django.shortcuts import get_object_or_404, render, redirect
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.template.defaultfilters import register
@@ -14,9 +15,9 @@ from django.contrib.auth.hashers import check_password
 from django.core.files.storage import FileSystemStorage
 
 
-# A ser usado no decorator @user_passes_test, testar é um funcionário ou superuser
+# A ser usado no decorator @user_passes_test, testar se é um funcionário ou superuser
 def admin_check(request, user):
-    return (user.is_authenticated and user.is_superuser) or request.session.get('funcionario_id') is not None
+    return user.is_authenticated and (user.is_superuser or request.session.get('funcionario_id') is not None)
 
 
 def index(request):
@@ -109,9 +110,23 @@ def forum(request):
         funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
         utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
 
-    forum_post_list = Post.objects.order_by('-pub_data')[:10]
+    forum_post_list = Post.objects.order_by('-pub_data')
 
-    context = {'forum_post_list': forum_post_list}
+    # Paginar a lista de posts.
+    paginator = Paginator(forum_post_list, 3)  # 3 posts por página
+    page_number = request.GET.get('page')  # Número da página atual
+
+    try:
+        # Retrieve the forum posts for the requested page
+        page_posts = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page
+        page_posts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g., 9999), deliver last page of results
+        page_posts = paginator.page(paginator.num_pages)
+
+    context = {'page_posts': page_posts}
     if utilizador:
         context['utilizador'] = utilizador
 
@@ -141,14 +156,39 @@ def resource_repository(request):
 
     return render(request, 'fitness/resource_repository.html', context)
 
+@login_required
+def gym_challenges(request):
+    utilizador = None
+
+    if request.session.get('cliente_id') is not None:
+        cliente_id = request.session.get('cliente_id')
+        cliente = get_object_or_404(Cliente, pk=cliente_id)
+        utilizador = get_object_or_404(Utilizador, user_id=cliente.utilizador.user.id)
+
+    if request.session.get('funcionario_id') is not None:
+        funcionario_id = request.session.get('funcionario_id')
+        funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
+        utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
+
+    gym_desafio_list = Desafio.objects.order_by('-data_inicio')
+    desafio_types = TypesOfDesafio.choices()
+    desafios_enlisted = {}
+
+    context = {'gym_desafio_list': gym_desafio_list, 'desafio_types': desafio_types}
+    if utilizador:
+        if request.method == 'POST' and request.POST:
+            desafio_id = request.POST['desafio_id']
+            desafio = get_object_or_404(Desafio, pk=desafio_id)
+            desafio.participantes.add(utilizador)
+
+        context['utilizador'] = utilizador
+
+    return render(request, 'fitness/desafios.html', context)
+
 
 def post_detalhes(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     utilizador = None
-
-    #if request.method == 'POST' and request.POST:
-    #    post.delete()
-    #    return HttpResponseRedirect(reverse('fitness:index'))
 
     # Se estiver logado e for cliente
     if request.session.get('cliente_id') is not None:
@@ -242,6 +282,22 @@ def create_resource(request):
 
         return HttpResponseRedirect(reverse('fitness:resource_repository'))
 
+#@user_passes_test(admin_check)
+def create_desafio(request):
+    if request.method == 'POST' and request.POST:
+        nome = request.POST['desafio_nome']
+        type = request.POST['desafio_type']
+        descricao = request.POST['desafio_descricao']
+        data_inicio = request.POST['desafio_data_inicio']
+        data_fim = request.POST['desafio_data_fim']
+        regras = request.POST['desafio_regras']
+
+        desafio = Desafio(nome=nome, type=type, descricao=descricao, data_inicio=data_inicio,
+                          data_fim=data_fim, regras=regras)
+        desafio.save()
+
+        return HttpResponseRedirect(reverse('fitness:gym_challenges'))
+
 
 @login_required
 def create_workout_class(request):
@@ -272,7 +328,7 @@ def create_comentario(request, post_id):
         texto_comentario = request.POST['comment_texto']
         autor = get_object_or_404(Utilizador, user=request.user)
 
-        comentario = post.comentario_set.create(autor=autor, texto=texto_comentario, pub_data=timezone.now())
+        novo_comentario = post.comentario_set.create(autor=autor, texto=texto_comentario, pub_data=timezone.now())
         return HttpResponseRedirect(reverse('fitness:post_detalhes', args=(post.id,)))
 
 
@@ -284,7 +340,7 @@ def create_resource_comment(request, resource_id):
         comment_text = request.POST['comment_texto']
         author = get_object_or_404(Utilizador, user=request.user)
 
-        comment = resource.commentary_set.create(author=author, texto=comment_text, pub_data=timezone.now())
+        new_comment = resource.commentary_set.create(author=author, texto=comment_text, pub_data=timezone.now())
         return HttpResponseRedirect(reverse('fitness:resource_details', args=(resource.id,)))
 
 
@@ -310,8 +366,9 @@ def register_users(request):
     # GET request ou renderização inicial
     else:
         user_types = TypesOfUtilizador.choices()
+        funcionario_cargos = Cargos.choices()
         print(user_types)
-        context = {'user_types': user_types}
+        context = {'user_types': user_types, 'funcionario_cargos': funcionario_cargos}
         return render(request, 'fitness/pagina_register.html', context)
 
 
