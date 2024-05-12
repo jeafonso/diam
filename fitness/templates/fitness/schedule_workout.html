@@ -69,7 +69,7 @@
                 <td id="monday_{{ hour }}">
                     {% for class in monday_classes %}
                         {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Monday' %}
-                            {{ class.name }}<br>
+                            <a href="{% url 'fitness:workout_details' class.id %}">{{ class.name }}</a><br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
@@ -77,7 +77,7 @@
                 <td id="tuesday_{{ hour }}">
                     {% for class in tuesday_classes %}
                         {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Tuesday' %}
-                            {{ class.name }}<br>
+                            <a href="{% url 'fitness:workout_details' class.id %}">{{ class.name }}</a><br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
@@ -85,7 +85,7 @@
                 <td id="wednesday_{{ hour }}">
                     {% for class in wednesday_classes %}
                         {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Wednesday' %}
-                            {{ class.name }}<br>
+                            <a href="{% url 'fitness:workout_details' class.id %}">{{ class.name }}</a><br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
@@ -93,7 +93,7 @@
                 <td id="thursday_{{ hour }}">
                     {% for class in thursday_classes %}
                         {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Thursday' %}
-                            {{ class.name }}<br>
+                            <a href="{% url 'fitness:workout_details' class.id %}">{{ class.name }}</a><br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
@@ -101,7 +101,7 @@
                 <td id="friday_{{ hour }}">
                     {% for class in friday_classes %}
                         {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Friday' %}
-                            {{ class.name }}<br>
+                            <a href="{% url 'fitness:workout_details' class.id %}">{{ class.name }}</a><br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
@@ -109,7 +109,7 @@
                 <td id="saturday_{{ hour }}">
                     {% for class in saturday_classes %}
                         {% if class.start_time == hour|stringformat:"02d"|add:":00" and class.day == 'Saturday' %}
-                            {{ class.name }}<br>
+                            <a href="{% url 'fitness:workout_details' class.id %}">{{ class.name }}</a><br>
                         {% endif %}
                     {% empty %}
                     {% endfor %}
@@ -119,7 +119,8 @@
     </table>
     <br>
     <br>
-    <button id="submitButton" style="margin: 0 auto; display: none;" class="btn btn-primary">Schedule Selected Workout</button>
+    <button id="submitButton" style="margin: 0 auto; display: none;" class="btn btn-primary"
+            data-toggle="modal" data-target="#successModal">Schedule Selected Workout</button>
 
     <div class="text-center">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -182,5 +183,21 @@
             </div>
         </div>
 
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="successModalLabel">Workout Successfully Scheduled!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <script defer src="{% static 'fitness/scripts/schedule_workout.js' %}?{% now 'U' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

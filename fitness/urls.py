@@ -35,6 +35,8 @@ urlpatterns = [
          name='create_resource_comment'),
     # ex: fitness/forum
     path('schedule_workout', views.schedule_workout, name='schedule_workout'),
+    # ex: fitness/forum/11
+    path('schedule_workout/<int:class_id>', views.workout_details, name='workout_details'),
     # ex: fitness/forum
     path('schedule_workout/new_workout', views.create_workout_class, name='create_workout_class'),
 ]

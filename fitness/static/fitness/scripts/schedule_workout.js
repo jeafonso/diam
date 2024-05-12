@@ -38,6 +38,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    const submitButton = document.getElementById('submitButton');
+
+    submitButton.addEventListener('click', function() {
+        submitButton.style.display = 'none';
+
+        const inputValue = currentSelectedCell;
+        const trimmedInputValue = inputValue.textContent.trim();
+
+        const csrftoken = getCookie('csrftoken');
+
+        const xhr = new XMLHttpRequest();
+        const url = '/fitness/schedule_workout'
+
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                console.log('Request successful');
+            } else {
+                console.error('Request failed');
+            }
+        };
+
+        const data = JSON.stringify({ inputValue: trimmedInputValue });
+        xhr.send(data);
+
+    });
+});
+
 function handleCellClick(day, hour) {
     var dayString = String(day);
 
@@ -46,7 +79,6 @@ function handleCellClick(day, hour) {
 
     if (validDay) {
         var cellId = `${validDay.toLowerCase()}_${hour}`;
-        console.log("cell ID = "+cellId);
         var cellElement = document.getElementById(cellId);
 
         if (cellElement) {
@@ -64,4 +96,20 @@ function handleCellClick(day, hour) {
     } else {
         console.error("Invalid day index:", day);
     }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Check if the cookie name matches the CSRF token cookie name
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

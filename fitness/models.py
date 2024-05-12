@@ -121,7 +121,7 @@ class Aula(models.Model):
     start_time = models.CharField(max_length=5, choices=STARTING_TIMES)
     day = models.CharField(max_length=20, choices=WEEK_DAYS)
     max_attendees = models.IntegerField(default=0)
-    attendees = models.ManyToManyField(Cliente, related_name='aulas')
+    attendees = models.ManyToManyField(Cliente)
 
     def __str__(self):
         return self.name

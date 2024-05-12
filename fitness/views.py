@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -39,6 +41,7 @@ def index(request):
 
 def schedule_workout(request):
     utilizador = None
+    cliente = None
 
     # Se estiver logado e for cliente
     if request.session.get('cliente_id') is not None:
@@ -51,6 +54,15 @@ def schedule_workout(request):
         funcionario_id = request.session.get('funcionario_id')
         funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
         utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
+
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = json.loads(request.body)
+        inputValue = data.get('inputValue', '')
+
+        workout = Aula.objects.filter(name=inputValue)
+        aula = workout[0]
+        addition = aula.attendees.add(cliente)
+        aula.save()
 
     monday_classes = Aula.objects.filter(day='Monday')
     tuesday_classes = Aula.objects.filter(day='Tuesday')
@@ -67,7 +79,8 @@ def schedule_workout(request):
 
     context = {'monday_classes': monday_classes, 'tuesday_classes': tuesday_classes,
                'wednesday_classes': wednesday_classes, 'thursday_classes': thursday_classes,
-               'friday_classes': friday_classes, 'saturday_classes': saturday_classes, 'starting_times': starting_times,
+               'friday_classes': friday_classes, 'saturday_classes': saturday_classes,
+               'starting_times': starting_times,
                'week_days': week_days, 'instructors': instructors, 'hours': hours}
 
     if utilizador:
@@ -177,6 +190,29 @@ def resource_details(request, resource_id):
         context['utilizador'] = utilizador
 
     return render(request, 'fitness/resource_detail.html', context)
+
+
+def workout_details(request, class_id):
+    workout = get_object_or_404(Aula, pk=class_id)
+    utilizador = None
+
+    # Se estiver logado e for cliente
+    if request.session.get('cliente_id') is not None:
+        cliente_id = request.session.get('cliente_id')
+        cliente = get_object_or_404(Cliente, pk=cliente_id)
+        utilizador = get_object_or_404(Utilizador, user_id=cliente.utilizador.user.id)
+
+    # Se estiver logado e for funcionário
+    if request.session.get('funcionario_id') is not None:
+        funcionario_id = request.session.get('funcionario_id')
+        funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
+        utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
+
+    context = {'workout': workout}
+    if utilizador:
+        context['utilizador'] = utilizador
+
+    return render(request, 'fitness/workout_details.html', context)
 
 
 @login_required
