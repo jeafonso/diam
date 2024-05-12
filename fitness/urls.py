@@ -33,12 +33,14 @@ urlpatterns = [
     # ex: fitness/resource_repository/2/create_resource_comment
     path('resource_repository/<int:resource_id>/create_resource_comment', views.create_resource_comment,
          name='create_resource_comment'),
-    # ex: fitness/gym_classes
-    path('gym_classes', views.class_page, name='class_page'),
-    # ex: fitness/gym_classes/4
-    path('gym_classes/<int:aula_id>/', views.class_signup, name='class_signup'),
     # ex: fitness/desafios
     path('desafios', views.gym_challenges, name='gym_challenges'),
     # ex: fitness/desafios/new_desafio
     path('desafios/new_desafio', views.create_desafio, name='create_desafio'),
+    # ex: fitness/forum
+    path('schedule_workout', views.schedule_workout, name='schedule_workout'),
+    # ex: fitness/forum/11
+    path('schedule_workout/<int:class_id>', views.workout_details, name='workout_details'),
+    # ex: fitness/forum
+    path('schedule_workout/new_workout', views.create_workout_class, name='create_workout_class'),
 ]

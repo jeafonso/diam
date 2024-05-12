@@ -1,7 +1,10 @@
+import json
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.template.defaultfilters import register
 from django.urls import reverse
 from django.utils import timezone
 from .models import *
@@ -37,22 +40,58 @@ def index(request):
     return render(request, 'fitness/index.html', context)
 
 
-def class_page(request):
-    aulas = Aula.objects.all()
-    return render(request, 'fitness/marcar_aulas.html', {"aulas": aulas})
+def schedule_workout(request):
+    utilizador = None
+
+    # Se estiver logado e for cliente
+    if request.session.get('cliente_id') is not None:
+        cliente_id = request.session.get('cliente_id')
+        cliente = get_object_or_404(Cliente, pk=cliente_id)
+        utilizador = get_object_or_404(Utilizador, user_id=cliente.utilizador.user.id)
+
+    # Se estiver logado e for funcionário
+    if request.session.get('funcionario_id') is not None:
+        funcionario_id = request.session.get('funcionario_id')
+        funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
+        utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
+
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = json.loads(request.body)
+        inputValue = data.get('inputValue', '')
+
+        workout = Aula.objects.filter(name=inputValue)
+        aula = workout[0]
+        addition = aula.attendees.add(utilizador)
+        aula.save()
+
+    monday_classes = Aula.objects.filter(day='Monday')
+    tuesday_classes = Aula.objects.filter(day='Tuesday')
+    wednesday_classes = Aula.objects.filter(day='Wednesday')
+    thursday_classes = Aula.objects.filter(day='Thursday')
+    friday_classes = Aula.objects.filter(day='Friday')
+    saturday_classes = Aula.objects.filter(day='Saturday')
+
+    starting_times = STARTING_TIMES
+    week_days = WEEK_DAYS
+    instructors = Funcionario.objects.all()
+
+    hours = [time[0] for time in STARTING_TIMES]
+
+    context = {'monday_classes': monday_classes, 'tuesday_classes': tuesday_classes,
+               'wednesday_classes': wednesday_classes, 'thursday_classes': thursday_classes,
+               'friday_classes': friday_classes, 'saturday_classes': saturday_classes,
+               'starting_times': starting_times,
+               'week_days': week_days, 'instructors': instructors, 'hours': hours}
+
+    if utilizador:
+        context['utilizador'] = utilizador
+
+    return render(request, 'fitness/schedule_workout.html', context)
 
 
-def class_signup(request, aula_id):
-    aula = Aula.objects.get(id=aula_id)
-    if request.user.is_authenticated and request.method == 'POST':
-        if aula.participantes.count() < aula.max_participantes:
-            aula.participantes.add(request.user)
-            return render(request, 'fitness/marcar_aulas.html')  # Redirect to class schedule page
-        else:
-            error_message = "Class is full!"
-            return render(request, 'fitness/signup_error.html', {'error_message': error_message})
-    else:
-        return render(request, 'fitness/pagina_login.html')
+@register.filter(name='times')
+def times(start, end):
+    return range(start, end)
 
 
 def forum(request):
@@ -116,6 +155,7 @@ def resource_repository(request):
 
     return render(request, 'fitness/resource_repository.html', context)
 
+
 @login_required
 def gym_challenges(request):
     utilizador = None
@@ -149,10 +189,6 @@ def gym_challenges(request):
 def post_detalhes(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     utilizador = None
-
-    #if request.method == 'POST' and request.POST:
-    #    post.delete()
-    #    return HttpResponseRedirect(reverse('fitness:index'))
 
     # Se estiver logado e for cliente
     if request.session.get('cliente_id') is not None:
@@ -196,6 +232,29 @@ def resource_details(request, resource_id):
     return render(request, 'fitness/resource_detail.html', context)
 
 
+def workout_details(request, class_id):
+    workout = get_object_or_404(Aula, pk=class_id)
+    utilizador = None
+
+    # Se estiver logado e for cliente
+    if request.session.get('cliente_id') is not None:
+        cliente_id = request.session.get('cliente_id')
+        cliente = get_object_or_404(Cliente, pk=cliente_id)
+        utilizador = get_object_or_404(Utilizador, user_id=cliente.utilizador.user.id)
+
+    # Se estiver logado e for funcionário
+    if request.session.get('funcionario_id') is not None:
+        funcionario_id = request.session.get('funcionario_id')
+        funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
+        utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
+
+    context = {'workout': workout}
+    if utilizador:
+        context['utilizador'] = utilizador
+
+    return render(request, 'fitness/workout_details.html', context)
+
+
 @login_required
 def create_post(request):
     if request.method == 'POST' and request.POST:
@@ -223,6 +282,7 @@ def create_resource(request):
 
         return HttpResponseRedirect(reverse('fitness:resource_repository'))
 
+
 #@user_passes_test(admin_check)
 def create_desafio(request):
     if request.method == 'POST' and request.POST:
@@ -238,6 +298,26 @@ def create_desafio(request):
         desafio.save()
 
         return HttpResponseRedirect(reverse('fitness:gym_challenges'))
+
+
+@login_required
+def create_workout_class(request):
+    if request.method == 'POST' and request.POST:
+        name = request.POST['class_name']
+        description = request.POST['class_description']
+
+        instructor_pk = request.POST.get('instructor')
+        instructor = get_object_or_404(Funcionario, id=instructor_pk)
+
+        starting_time = request.POST['starting_time']
+        week_day = request.POST['week_day']
+        max_attendees = request.POST['max_attendees']
+
+        workout_class = Aula(name=name, description=description, instructor=instructor, start_time=starting_time,
+                             day=week_day, max_attendees=max_attendees)
+        workout_class.save()
+
+        return HttpResponseRedirect(reverse('fitness:schedule_workout'))
 
 
 @login_required

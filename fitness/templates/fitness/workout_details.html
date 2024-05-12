@@ -1,0 +1,92 @@
+{% extends "./index.html" %}
+
+{% block title %}Workout Details{% endblock %}
+
+{% block styles %}
+<!-- Include Bootstrap CSS (Assuming you have Bootstrap linked in your base template) -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<style>
+    .resource-details,
+    .comments,
+    .add-comment {
+        background-color: #f9f9f9;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+
+    .comments {
+        background-color: #f1f1f1;
+    }
+
+    .add-comment {
+        background-color: #e8e8e8;
+    }
+
+    .profile-picture {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 2px;
+        margin-left: 10px;
+    }
+
+    .comment {
+        border-bottom: 1px solid #ddd;
+        padding-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="resource-details">
+                <h2>{{ workout.name }}</h2>
+                <p><strong>Instructor</strong>: {{ workout.instructor }}</p>
+                <p><strong>Start Time</strong>: {{ workout.start_time }}</p>
+                <p><strong>Day</strong>: {{ workout.day }}</p>
+                <p><strong>Maximum Attendees</strong>: {{ workout.max_attendees }}</p>
+                {% if workout.attendees.exists %}
+                    <p><strong>Attendees Already registered for this class:</strong>:</p>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for attendee in workout.attendees.all %}
+                                    <tr>
+                                        <td>
+                                            {% if attendee.user.profile_picture %}
+                                                <img class="profile-picture" src="{{ attendee.user.profile_picture.url }}" alt="Profile Picture">
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ attendee.user }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p><strong>No attendees currently registered for this workout.</strong></p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="post-description">
+                <h4>Description</h4>
+                <p>{{ workout.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
