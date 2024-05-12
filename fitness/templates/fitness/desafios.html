@@ -1,35 +1,110 @@
 {% extends "./pagina_conta.html" %}
 
-{% block title %}Desafios{% endblock %}
+{% block title %}Open Challenges{% endblock %}
+
+{% block styles %}
+/* Styling for Profile Pictures */
+.profile-picture {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 2px;
+    margin-left: 10px;
+{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <h2>Mudar Password</h2>
-    {% if error_message %}
-    <p style="color: red"><strong>{{ error_message }}</strong></p>
-    {% endif %}
-    <form action="{% url 'fitness:change_password' %}" method="post">
-        {% csrf_token %}
-        <p>
-            <label for="old_password">Password Atual:</label><br>
-            <input type="password" id="old_password" name="old_password" required><br>
-        </p>
-
-        <p>
-            <label for="new_password1">Nova Password:</label><br>
-            <input type="password" id="new_password1" name="new_password1" required placeholder="Inserir nova password"><br>
-        </p>
-
-        <p>
-            <label for="new_password2">Confirmar Nova Password:</label><br>
-            <input type="password" id="new_password2" name="new_password2" required
-                   placeholder="Confirmar nova password"><br>
-        </p>
-
-        <div>
-            <button type="submit" class="confirm-button">Mudar Password</button>
-            <a href="{% url 'fitness:user_info' %}"><button type="button" class="cancel-button">Cancel</button></a>
+<div class="container">
+    <h1 class="mt-5 mb-4">Open Challenges</h1>
+    {% if gym_desafio_list %}
+        <div class="list-group">
+            {% for desafio in gym_desafio_list %}
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ desafio.nome }}</h5>
+                    <small>{{ desafio.data_inicio }} - {{ desafio.data_fim }}</small>
+                </div>
+                <p class="mb-1">{{ desafio.descricao }}</p> <br><br>
+                <p><strong>Rules:</strong> {{ desafio.regras }}</p>
+                <p class="participant-container"><strong>Participants:</strong>
+                    {% for participante in desafio.participantes.all %}
+                        <span class="badge badge-secondary">
+                            {% if participante.profile_picture %}
+                                <img class="profile-picture" src="{{ participante.profile_picture.url }}" alt="Profile Picture"></a>
+                            {% endif %}
+                            {{ participante }}
+                        </span>
+                    {% endfor %}
+                </p>
+                <form method="POST" action="{% url 'fitness:gym_challenges' %}">
+                {% csrf_token %}
+                    <input type="hidden" name="desafio_id" value="{{ desafio.id }}">
+                    {% if utilizador not in desafio.participantes.all %}
+                    <button type="submit" class="btn btn-primary">Join Challenge</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary" disabled>Joined!</button>
+                    {% endif %}
+                </form>
+            </div>
+            {% endfor %}
         </div>
-    </form>
+    {% else %}
+        <p>No active challenges available.</p>
+    {% endif %}
+
+    <!--Challenge Modal-->
+    <br>
+    <br>
+    <div class="text-center">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#challengeModal">
+            Upload new Challenge
+        </button>
+    </div>
+
+    <div class="modal fade" id="challengeModal" tabindex="-1" role="dialog" aria-labelledby="challengeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="challengeModalLabel">New Gym Challenge</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'fitness:create_desafio' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="desafio_nome">Name:</label>
+                            <input type="text" class="form-control" id="desafio_nome" name="desafio_nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="desafio_type">Category:</label>
+                            <select id="desafio_type" name="desafio_type" class="form-control" required>
+                                {% for desafio in desafio_types %}
+                                <option value="{{ desafio.0 }}">{{ desafio.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="desafio_descricao">Description:</label>
+                            <textarea class="form-control" id="desafio_descricao" name="desafio_descricao" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="desafio_data_inicio">Start Date:</label>
+                            <input type="date" class="form-control" id="desafio_data_inicio" name="desafio_data_inicio" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="desafio_data_fim">End Date:</label>
+                            <input type="date" class="form-control" id="desafio_data_fim" name="desafio_data_fim" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="desafio_regras">Rules:</label>
+                            <textarea class="form-control" id="desafio_regras" name="desafio_regras" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Challenge</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

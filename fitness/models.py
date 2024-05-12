@@ -117,7 +117,7 @@ class Aula(models.Model):
     instrutor = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
     horario = models.DateTimeField('horario de aula')
     max_participantes = models.IntegerField(default=0)
-    participantes = models.ManyToManyField(Cliente, related_name='aulas')
+    participantes = models.ManyToManyField(Utilizador, related_name='aulas')
 
     def __str__(self):
         # Retorna o nome da aula

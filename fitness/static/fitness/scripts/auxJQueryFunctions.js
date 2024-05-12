@@ -1,3 +1,5 @@
+//import flatpickr from 'flatpickr';
+
 // Conteudo do ficheiro antigo de JS
 let saveBtn = document.getElementById('saveBtn');
 let cancelBtn = document.getElementById('cancelBtn');
@@ -123,7 +125,7 @@ $(document).ready(function() {
 
     // Novas coisas para o projeto
 
-    // Mostrar inputs de cliente ou funcionário. Os hide() não são obrigatórios, apenas uma precaução
+    // Mostrar inputs de cliente ou funcionário.
     $('#type-user').change(function() {
         const selectedType = $(this).val();
         if (selectedType == 'cliente') {
@@ -141,4 +143,50 @@ $(document).ready(function() {
             $('#funcionario-inputs').hide();
         }
     });
+
+    // Ações nos inputs de data do modal para criar Desafios
+    const $startDateInput = $('#desafio_data_inicio');
+    const $endDateInput = $('#desafio_data_fim');
+
+    $startDateInput.on('input', handleDateChange);
+    $endDateInput.on('input', handleDateChange);
+
+    // Event-handler para mudança de valores das datas
+    function handleDateChange() {
+        const startDateValue = $startDateInput.val();
+        const endDateValue = $endDateInput.val();
+
+        // Update do min de data_fim
+        if (startDateValue)
+            $endDateInput.attr('min', startDateValue);
+        else
+            $endDateInput.removeAttr('min');    // Remover min quando se faz clear
+
+        // Update do max de data_inicio
+        if (endDateValue)
+            $startDateInput.attr('max', endDateValue);
+        else
+            $startDateInput.removeAttr('max');  // Remover max quando se faz clear
+    }
+
+    // Meter scroll na lista de desafios quando exceder um certo número
+    let desafios = $('.list-group-item');
+    let containerDesafios = $('.list-group');
+    const nrDesafios = desafios.length; console.log(nrDesafios);
+
+    if (nrDesafios == 3) {
+        maxLgHeight = containerDesafios.height();
+        localStorage.setItem('maxLgHeight', JSON.stringify(maxLgHeight)); // Guardar no localStorage
+    }
+
+    console.log("altura_máxima: " + localStorage.getItem('maxLgHeight'));
+    if (nrDesafios > 3 && localStorage.getItem('maxLgHeight')) {
+        const maxHeight = JSON.parse(localStorage.getItem('maxLgHeight')); // Buscar max-height do localStorage
+        containerDesafios.css({
+            'max-height': maxHeight,
+            'overflow': 'auto',
+            '-webkit-overflow-scrolling': 'touch'
+            // Add any other styles you need
+        });
+    }
 });

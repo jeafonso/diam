@@ -18,8 +18,8 @@ urlpatterns = [
     path('account/password', views.change_password, name='change_password'),
     # ex: fitness/forum
     path('forum', views.forum, name='forum'),
-    # ex: fitness/forum/new_Post
-    path('forum/new_Post', views.create_post, name='create_post'),
+    # ex: fitness/forum/new_post
+    path('forum/new_post', views.create_post, name='create_post'),
     # ex: fitness/forum/11
     path('forum/<int:post_id>', views.post_detalhes, name='post_detalhes'),
     # ex: fitness/forum/11/comment
@@ -33,6 +33,12 @@ urlpatterns = [
     # ex: fitness/resource_repository/2/create_resource_comment
     path('resource_repository/<int:resource_id>/create_resource_comment', views.create_resource_comment,
          name='create_resource_comment'),
-    path('signup/<int:aula_id>/', views.class_signup, name='class_signup'),
-    path('desafios', views.class_page, name='class_page')
+    # ex: fitness/gym_classes
+    path('gym_classes', views.class_page, name='class_page'),
+    # ex: fitness/gym_classes/4
+    path('gym_classes/<int:aula_id>/', views.class_signup, name='class_signup'),
+    # ex: fitness/desafios
+    path('desafios', views.gym_challenges, name='gym_challenges'),
+    # ex: fitness/desafios/new_desafio
+    path('desafios/new_desafio', views.create_desafio, name='create_desafio'),
 ]

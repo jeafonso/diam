@@ -30,24 +30,24 @@
             </table>
         </div>
 
-    <!-- Pagination links -->
-    <nav aria-label="Pagination">
-        <ul class="pagination justify-content-center">
-            {% if page_posts.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_posts.previous_page_number }}">Previous</a>
+        <!-- Pagination links -->
+        <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+                {% if page_posts.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_posts.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_posts.number }}</span>
                 </li>
-            {% endif %}
-            <li class="page-item active">
-                <span class="page-link">{{ page_posts.number }}</span>
-            </li>
-            {% if page_posts.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_posts.next_page_number }}">Next</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+                {% if page_posts.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_posts.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     {% else %}
         <p>Still no published posts.</p>
     {% endif %}
@@ -55,16 +55,16 @@
     <br>
     <br>
     <div class="text-center">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#postModal">
             Publish new Post
         </button>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="postModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New Post</h5>
+                    <h5 class="modal-title" id="postModalLabel">New Post</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -306,3 +306,15 @@ body {
 .social-icon:hover {
     transform: translateY(-5px); /* Adjust the amount of jump */
 }
+
+/* Estilo da lista de participantes nos desafios */
+.participant-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.participant-container .badge {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
