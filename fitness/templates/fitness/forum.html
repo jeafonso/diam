@@ -3,54 +3,57 @@
 {% block title %}Fórum de Fitness{% endblock %}
 
 {% block content %}
-    <h1 class="mt-5 mb-4">Discussion Forum</h1>
-    {% if page_posts %}
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Author</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Comments</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for post in page_posts %}
+    <div class="container">
+        <h1 class="mt-5 mb-4">Discussion Forum</h1>
+        {% if page_posts %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
                         <tr>
-                            <td><a href="{% url 'fitness:post_detalhes' post.id %}">{{ post.titulo }}</a></td>
-                            <td>{{ post.autor }}</td>
-                            <td>{{ post.pub_data }}</td>
-                            <td>
-                                <span class="badge badge-primary" style="background-color: #004085;">{{ post.comentario_set.count }}</span>
-                            </td>
+                            <th scope="col">Title</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Comments</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {% for post in page_posts %}
+                            <tr>
+                                <td><a href="{% url 'fitness:post_detalhes' post.id %}">{{ post.titulo }}</a></td>
+                                <td>{{ post.autor }}</td>
+                                <td>{{ post.pub_data }}</td>
+                                <td>
+                                    <span class="badge badge-primary" style="background-color: #004085;">{{ post.comentario_set.count }}</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- Pagination links -->
-        <nav aria-label="Pagination">
-            <ul class="pagination justify-content-center">
-                {% if page_posts.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_posts.previous_page_number }}">Previous</a>
+            <!-- Pagination links -->
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_posts.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_posts.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_posts.number }}</span>
                     </li>
-                {% endif %}
-                <li class="page-item active">
-                    <span class="page-link">{{ page_posts.number }}</span>
-                </li>
-                {% if page_posts.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_posts.next_page_number }}">Next</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-    {% else %}
-        <p>Still no published posts.</p>
-    {% endif %}
+                    {% if page_posts.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_posts.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <p>Still no published posts.</p>
+        {% endif %}
+    </div>
+
 
     <br>
     <br>

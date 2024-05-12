@@ -44,51 +44,53 @@
 
 {% block content %}
 {% load static %}
-<div class="post-details">
-    <div class="post-header">
-        <h2>{{ post.titulo }}</h2>
-        <br>
-        <p> <strong>Author</strong>:
-            {% if post.autor.profile_picture %}
-                <img class="profile-picture" src="{{ post.autor.profile_picture.url }}" alt="Profile Picture">
-            {% endif %}
-            {{ post.autor }}
-        </p>
-        <p><strong>Date</strong>: {{ post.pub_data }}</p>
-    </div>
-    <div class="post-description">
-        <p><h6><strong>Description</strong>:</h6> {{ post.descricao }}</p>
-    </div>
-</div>
-
-<div class="comments">
-    <h3>Comments</h3>
-    {% if post.comentario_set %}
-        {% for comentario in post.comentario_set.all %}
-            <div class="comment">
-                <p>
-                    {% if comentario.autor.profile_picture %}
-                        <img class="profile-picture" src="{{ comentario.autor.profile_picture.url }}" alt="Profile Picture"></a>
-                    {% endif %}
-                    <strong>{{ comentario.autor }}</strong> - {{ comentario.pub_data }}
-                </p>
-                <p>{{ comentario.texto }}</p>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No comments for this post.</p>
-    {% endif %}
-</div>
-
-<div class="add-comment">
-    <h3>Add Comment</h3>
-    <form method="POST" action="{% url 'fitness:create_comentario' post.id %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="comment_texto">Text:</label>
-            <textarea class="form-control" id="comment_texto" name="comment_texto" rows="3"></textarea>
+<div class="container">
+    <div class="post-details">
+        <div class="post-header">
+            <h2>{{ post.titulo }}</h2>
+            <br>
+            <p> <strong>Author</strong>:
+                {% if post.autor.profile_picture %}
+                    <img class="profile-picture" src="{{ post.autor.profile_picture.url }}" alt="Profile Picture">
+                {% endif %}
+                {{ post.autor }}
+            </p>
+            <p><strong>Date</strong>: {{ post.pub_data }}</p>
         </div>
-        <button type="submit" class="btn btn-primary">Send</button>
-    </form>
+        <div class="post-description">
+            <p><h6><strong>Description</strong>:</h6> {{ post.descricao }}</p>
+        </div>
+    </div>
+
+    <div class="comments">
+        <h3>Comments</h3>
+        {% if post.comentario_set %}
+            {% for comentario in post.comentario_set.all %}
+                <div class="comment">
+                    <p>
+                        {% if comentario.autor.profile_picture %}
+                            <img class="profile-picture" src="{{ comentario.autor.profile_picture.url }}" alt="Profile Picture"></a>
+                        {% endif %}
+                        <strong>{{ comentario.autor }}</strong> - {{ comentario.pub_data }}
+                    </p>
+                    <p>{{ comentario.texto }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No comments for this post.</p>
+        {% endif %}
+    </div>
+
+    <div class="add-comment">
+        <h3>Add Comment</h3>
+        <form method="POST" action="{% url 'fitness:create_comentario' post.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="comment_texto">Text:</label>
+                <textarea class="form-control" id="comment_texto" name="comment_texto" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
