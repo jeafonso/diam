@@ -2,8 +2,7 @@ import json
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import get_object_or_404, render
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.template import loader
+from django.http import HttpResponseRedirect
 from django.template.defaultfilters import register
 from django.urls import reverse
 from django.utils import timezone
@@ -12,12 +11,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.hashers import check_password
-from django.core.files.storage import FileSystemStorage
 
 
 # A ser usado no decorator @user_passes_test, testar se é um funcionário ou superuser
-def admin_check(request, user):
-    return user.is_authenticated and (user.is_superuser or request.session.get('funcionario_id') is not None)
+def admin_check(user):
+    utilizador = get_object_or_404(Utilizador, user=user)
+    funcionario = get_object_or_404(Funcionario, utilizador=utilizador)
+    return user.is_authenticated and (user.is_superuser or funcionario is not None)
 
 
 def index(request):
@@ -283,7 +283,7 @@ def create_resource(request):
         return HttpResponseRedirect(reverse('fitness:resource_repository'))
 
 
-#@user_passes_test(admin_check)
+@user_passes_test(admin_check)
 def create_desafio(request):
     if request.method == 'POST' and request.POST:
         nome = request.POST['desafio_nome']
