@@ -3,39 +3,58 @@
 {% block title %}Resources Repository{% endblock %}
 
 {% block content %}
-
-<h1 class="mt-5 mb-4">Available Shared Resources</h1>
-
-{% if resource_repository_list %}
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Author</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Comments</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in resource_repository_list %}
+    <div class="container">
+        <h1 class="mt-5 mb-4">Available Shared Resources</h1>
+        {% if page_resources %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-dark">
                         <tr>
-                            <td><a href="{% url 'fitness:resource_details' item.id %}">{{ item.title }}</a></td>
-                            <td>{{ item.type }}</td>
-                            <td>{{ item.author }}</td>
-                            <td>{{ item.pub_data }}</td>
-                            <td>
-                                <span class="badge badge-primary" style="background-color: #004085;">{{ item.commentary_set.count }}</span>
-                            </td>
+                            <th scope="col">Title</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Comments</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <p>Still no available Resources. Be the first to share!</p>
-    {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for item in page_resources %}
+                            <tr>
+                                <td><a href="{% url 'fitness:resource_details' item.id %}">{{ item.title }}</a></td>
+                                <td>{{ item.type }}</td>
+                                <td>{{ item.author }}</td>
+                                <td>{{ item.pub_data }}</td>
+                                <td>
+                                    <span class="badge badge-primary" style="background-color: #004085;">{{ item.commentary_set.count }}</span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination links -->
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_resources.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_resources.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_resources.number }}</span>
+                    </li>
+                    {% if page_resources.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_resources.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <p class="mt-5">Still no available Resources. Be the first to share!</p>
+        {% endif %}
+    </div>
 
     <div class="text-center">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -57,7 +76,7 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="resource_title">Title:</label>
-                            <input type="text" class="form-control" id="resource_title" name="resource_title">
+                            <input type="text" class="form-control" id="resource_title" name="resource_title" required>
                         </div>
                         <div class="form-group">
                             <label for="resource_type" class="form-label">Resource Type:</label>
@@ -69,7 +88,7 @@
                         </div>
                         <div class="form-group">
                             <label for="resource_description">Description:</label>
-                            <textarea class="form-control" id="resource_description" name="resource_description" rows="20"></textarea>
+                            <textarea class="form-control" id="resource_description" name="resource_description" rows="20" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Create</button>
                     </form>
@@ -77,5 +96,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

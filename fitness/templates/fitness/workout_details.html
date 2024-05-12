@@ -24,7 +24,7 @@
         background-color: #e8e8e8;
     }
 
-    .profile-picture {
+    .profile-picture-table {
         width: 30px;
         height: 30px;
         border-radius: 50%;
@@ -35,6 +35,14 @@
     .comment {
         border-bottom: 1px solid #ddd;
         padding-top: 10px;
+    }
+
+    .profile-picture {
+        width: 45px;
+        height: 45px;
+        border-radius: 70%;
+        margin-right: 2px;
+        margin-left: 10px;
     }
 </style>
 {% endblock %}
@@ -56,20 +64,17 @@
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead class="thead-dark">
-                                <tr>
-                                    <th></th>
-                                    <th>Name</th>
-                                </tr>
+                                <th>Name</th>
                             </thead>
                             <tbody>
                                 {% for attendee in workout.attendees.all %}
                                     <tr>
                                         <td>
-                                            {% if attendee.user.profile_picture %}
-                                                <img class="profile-picture" src="{{ attendee.user.profile_picture.url }}" alt="Profile Picture">
+                                            {% if attendee.profile_picture %}
+                                                <img class="profile-picture-table" src="{{ attendee.profile_picture.url }}" alt="Profile Picture">
                                             {% endif %}
+                                            {{ attendee.user }}
                                         </td>
-                                        <td>{{ attendee.user }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

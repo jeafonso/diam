@@ -2,8 +2,7 @@ import json
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import get_object_or_404, render
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.template import loader
+from django.http import HttpResponseRedirect
 from django.template.defaultfilters import register
 from django.urls import reverse
 from django.utils import timezone
@@ -12,12 +11,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.hashers import check_password
-from django.core.files.storage import FileSystemStorage
 
 
 # A ser usado no decorator @user_passes_test, testar se é um funcionário ou superuser
-def admin_check(request, user):
-    return user.is_authenticated and (user.is_superuser or request.session.get('funcionario_id') is not None)
+def admin_check(user):
+    utilizador = get_object_or_404(Utilizador, user=user)
+    funcionario = get_object_or_404(Funcionario, utilizador=utilizador)
+    return user.is_authenticated and (user.is_superuser or funcionario is not None)
 
 
 def index(request):
@@ -112,17 +112,17 @@ def forum(request):
     forum_post_list = Post.objects.order_by('-pub_data')
 
     # Paginar a lista de posts.
-    paginator = Paginator(forum_post_list, 3)  # 3 posts por página
+    paginator = Paginator(forum_post_list, 5)  # 5 posts por página
     page_number = request.GET.get('page')  # Número da página atual
 
     try:
-        # Retrieve the forum posts for the requested page
+        # Devolver posts da página atual
         page_posts = paginator.page(page_number)
     except PageNotAnInteger:
-        # If page is not an integer, deliver first page
+        # Se page não for um inteiro devolve os posts da 1ª página
         page_posts = paginator.page(1)
     except EmptyPage:
-        # If page is out of range (e.g., 9999), deliver last page of results
+        # Se a page estiver fora do alcançe, devolve os posts da última página
         page_posts = paginator.page(paginator.num_pages)
 
     context = {'page_posts': page_posts}
@@ -145,10 +145,24 @@ def resource_repository(request):
         funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
         utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
 
-    resource_repository_list = Resource.objects.order_by('-pub_data')[:10]
+    resource_repository_list = Resource.objects.order_by('-pub_data')
     resource_types = TypesOfResource.choices()
 
-    context = {'resource_repository_list': resource_repository_list, 'resource_types': resource_types}
+    # Paginar a lista de posts.
+    paginator = Paginator(resource_repository_list, 5)  # 5 posts por página
+    page_number = request.GET.get('page')  # Número da página atual
+
+    try:
+        # Devolver posts da página atual
+        page_resources = paginator.page(page_number)
+    except PageNotAnInteger:
+        # Se page não for um inteiro devolve os posts da 1ª página
+        page_resources = paginator.page(1)
+    except EmptyPage:
+        # Se a page estiver fora do alcançe, devolve os posts da última página
+        page_resources = paginator.page(paginator.num_pages)
+
+    context = {'page_resources': page_resources, 'resource_types': resource_types}
 
     if utilizador:
         context['utilizador'] = utilizador
@@ -172,9 +186,10 @@ def gym_challenges(request):
 
     gym_desafio_list = Desafio.objects.order_by('-data_inicio')
     desafio_types = TypesOfDesafio.choices()
-    desafios_enlisted = {}
+    current_date = timezone.now().strftime('%Y-%m-%d')
 
-    context = {'gym_desafio_list': gym_desafio_list, 'desafio_types': desafio_types}
+    context = {'gym_desafio_list': gym_desafio_list, 'desafio_types': desafio_types,
+               'current_date': current_date}
     if utilizador:
         if request.method == 'POST' and request.POST:
             desafio_id = request.POST['desafio_id']
@@ -283,7 +298,7 @@ def create_resource(request):
         return HttpResponseRedirect(reverse('fitness:resource_repository'))
 
 
-#@user_passes_test(admin_check)
+@user_passes_test(admin_check)
 def create_desafio(request):
     if request.method == 'POST' and request.POST:
         nome = request.POST['desafio_nome']
