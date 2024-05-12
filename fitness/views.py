@@ -112,17 +112,17 @@ def forum(request):
     forum_post_list = Post.objects.order_by('-pub_data')
 
     # Paginar a lista de posts.
-    paginator = Paginator(forum_post_list, 3)  # 3 posts por página
+    paginator = Paginator(forum_post_list, 5)  # 5 posts por página
     page_number = request.GET.get('page')  # Número da página atual
 
     try:
-        # Retrieve the forum posts for the requested page
+        # Devolver posts da página atual
         page_posts = paginator.page(page_number)
     except PageNotAnInteger:
-        # If page is not an integer, deliver first page
+        # Se page não for um inteiro devolve os posts da 1ª página
         page_posts = paginator.page(1)
     except EmptyPage:
-        # If page is out of range (e.g., 9999), deliver last page of results
+        # Se a page estiver fora do alcançe, devolve os posts da última página
         page_posts = paginator.page(paginator.num_pages)
 
     context = {'page_posts': page_posts}
@@ -172,9 +172,10 @@ def gym_challenges(request):
 
     gym_desafio_list = Desafio.objects.order_by('-data_inicio')
     desafio_types = TypesOfDesafio.choices()
-    desafios_enlisted = {}
+    current_date = timezone.now().strftime('%Y-%m-%d')
 
-    context = {'gym_desafio_list': gym_desafio_list, 'desafio_types': desafio_types}
+    context = {'gym_desafio_list': gym_desafio_list, 'desafio_types': desafio_types,
+               'current_date': current_date}
     if utilizador:
         if request.method == 'POST' and request.POST:
             desafio_id = request.POST['desafio_id']
