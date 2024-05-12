@@ -5,7 +5,7 @@
 {% block content %}
     <div class="container">
         <h1 class="mt-5 mb-4">Available Shared Resources</h1>
-        {% if resource_repository_list %}
+        {% if page_resources %}
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead class="thead-dark">
@@ -18,7 +18,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in resource_repository_list %}
+                        {% for item in page_resources %}
                             <tr>
                                 <td><a href="{% url 'fitness:resource_details' item.id %}">{{ item.title }}</a></td>
                                 <td>{{ item.type }}</td>
@@ -32,6 +32,25 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination links -->
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_resources.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_resources.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_resources.number }}</span>
+                    </li>
+                    {% if page_resources.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_resources.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         {% else %}
             <p class="mt-5">Still no available Resources. Be the first to share!</p>
         {% endif %}

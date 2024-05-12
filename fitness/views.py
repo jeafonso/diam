@@ -145,10 +145,24 @@ def resource_repository(request):
         funcionario = get_object_or_404(Funcionario, pk=funcionario_id)
         utilizador = get_object_or_404(Utilizador, user_id=funcionario.utilizador.user.id)
 
-    resource_repository_list = Resource.objects.order_by('-pub_data')[:10]
+    resource_repository_list = Resource.objects.order_by('-pub_data')
     resource_types = TypesOfResource.choices()
 
-    context = {'resource_repository_list': resource_repository_list, 'resource_types': resource_types}
+    # Paginar a lista de posts.
+    paginator = Paginator(resource_repository_list, 5)  # 5 posts por página
+    page_number = request.GET.get('page')  # Número da página atual
+
+    try:
+        # Devolver posts da página atual
+        page_resources = paginator.page(page_number)
+    except PageNotAnInteger:
+        # Se page não for um inteiro devolve os posts da 1ª página
+        page_resources = paginator.page(1)
+    except EmptyPage:
+        # Se a page estiver fora do alcançe, devolve os posts da última página
+        page_resources = paginator.page(paginator.num_pages)
+
+    context = {'page_resources': page_resources, 'resource_types': resource_types}
 
     if utilizador:
         context['utilizador'] = utilizador
